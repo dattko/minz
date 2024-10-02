@@ -1,0 +1,31 @@
+@mixin responsive($num) {
+  @media (max-width: $num) {
+    @content;
+  }
+}
+
+@mixin ellipsis($lines: 1) {
+  @if ($lines == 1) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+  }
+}
+
+@mixin gradient-text($start-color, $end-color, $angle: 'to right') {
+  background: linear-gradient(#{$angle}, $start-color, $end-color);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+@mixin neon-text($neon-color, $color: #fff) {
+  text-shadow: 0 0 3px $color, 0 0 10px $neon-color, 0 0 12px $neon-color, 0 0 14px $neon-color;
+}

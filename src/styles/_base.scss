@@ -1,0 +1,40 @@
+// 레이아웃 관련
+$maxWidth: 1080px;
+
+
+//컬러
+$colorPrimary: #E0DFD5;
+$colorSecondary: #FECC6A;
+$colorAccent: #EB6548;
+$colorCoral: #FF9E7B;
+$colorRaspberry: #C3375A;
+$colorNavy: #232D3F;
+$colorGray: #EEEDEB;
+
+$colorWhite: #fff;
+$colorBlack: #161616;
+$colorGray: #495057;
+$colorGrayLight: #999;
+$colorRed: #f03e3e;
+$colorOrage: #f55729;
+
+//폰트사이즈
+$fontSizeXSmall: 12px;
+$fontSizeSmall: 14px;
+$fontSizeMedium: 16px;
+$fontSizeLarge: 18px;
+$fontSizeXLarge: 20px;
+$fontSizeTitle: 24px;
+
+//모바일 사이즈
+$fontSizeMobileSmall: 10px;
+$fontSizeMobileMedium: 12px;
+$fontSizeMobileLarge: 14px;
+
+//트랜지션
+$transition: .3s ease-in;
+
+
+//반응형
+$breakpointMedium: 768px;
+$breakpointLarge: 992px;
