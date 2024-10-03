@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import MainWrap from '@/components/layouts/mainWrap/MainWrap';
 import '@style/globals.scss';
 
 
@@ -52,7 +53,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        {children}
+        <MainWrap>
+            {children}
+        </MainWrap>
       </body>
     </html>
   );
