@@ -1,0 +1,95 @@
+.header{
+  height: 80px;
+  padding: $layoutPadding;
+  &__wrap{
+    width: 100%;
+    max-width: $containerWidth;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    gap: 20px;
+  }
+
+  &__logo{
+    a{
+      font-size: 26px;
+      color: $colorPrimary;
+      font-weight: 700;
+    }
+  }
+
+  &__search{
+    display: flex;
+    height: 42px;
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 400px;
+    width: 100%;
+    border: 2px solid $colorGray; 
+    &:hover{
+      border-color: $colorPrimary;
+      .header__search__btn{
+        background-color: $colorPrimary;
+      }
+    } 
+    &:focus-within{
+      border-color: $colorPrimary;
+      .header__search__btn{
+        background-color: $colorPrimary;
+      }
+    }
+    
+    &__btn{
+      height: 100%;
+      background-color: $colorGray;
+      color: $colorWhite;
+    }
+  }
+
+}
+
+.nav{
+  padding: $layoutPadding;
+  background-color: $colorPrimary;
+  height: 42px;
+  &__wrap{
+    max-width: $containerWidth;
+    margin: 0 auto;
+    height: 100%;
+  }
+  &__ul{
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+  &__li{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    &::after{
+      content: '';
+      display: block;
+      width: 1px;
+      height: 12px;
+      background-color: $colorGray;
+      margin: 0 12px;
+    }
+
+    &:last-child{
+      &::after{
+        display: none;
+      }
+    }
+    a{
+      color: #fff;
+      font-size: 14px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      &:hover{
+        color: $colorBlack;
+      }
+    }
+  }
+}

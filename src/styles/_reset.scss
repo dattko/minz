@@ -10,12 +10,12 @@ html{scroll-behavior: smooth;
     border-radius: 8px;
   }
 }
-body{font-family: Pretendard, sans-serif; background-color: #F5F7F8; line-height: 1; overscroll-behavior-y: none; }
+body{font-family: SpoqaHanSansNeo, sans-serif; line-height: 1; overscroll-behavior-y: none; }
 img, picture, video, canvas, svg {display: block;max-width:100%;object-fit: cover;max-height: 100%;
 }
-button {background:none;border:0;cursor:pointer; display: flex; align-items: center; justify-content: center; transition: .2s ease; color: #000;}
+button {background:none;border:0;cursor:pointer; display: flex; align-items: center; justify-content: center;  color: #000; padding: 0 12px;}
 a{text-decoration:none; cursor: pointer; color: #000;}
 table {border-collapse:collapse;border-spacing:0}
 *:after,*::before{display: flex; }
 a,span{color: $colorBlack;}
-input, textarea{border:none;outline:none; height: 36px; border-radius: 4px; border: 1px solid $colorGray; width: 100%; padding: 0 12px; font-family: Pretendard, sans-serif; }
+input, textarea{border: none;outline:none; height: 100%;  font-family: SpoqaHanSansNeo, sans-serif; font-size: 13px; flex: 1;  border-radius: 4px; padding: 0 12px;}
