@@ -1,6 +1,6 @@
 .header{
   height: 80px;
-  padding: $layoutPadding;
+  padding: $containerPadding;
   &__wrap{
     width: 100%;
     max-width: $containerWidth;
@@ -13,9 +13,10 @@
 
   &__logo{
     a{
-      font-size: 26px;
+      font-size: 30px;
       color: $colorPrimary;
       font-weight: 700;
+      font-family: HakgyoansimTtwimteul, sans-serif;
     }
   }
 
@@ -50,7 +51,7 @@
 }
 
 .nav{
-  padding: $layoutPadding;
+  padding: $containerPadding;
   background-color: $colorPrimary;
   height: 42px;
   &__wrap{
@@ -82,13 +83,13 @@
       }
     }
     a{
-      color: #fff;
-      font-size: 14px;
       height: 100%;
       display: flex;
       align-items: center;
-      &:hover{
-        color: $colorBlack;
+      p{
+        &:hover{
+          color: $colorGray;
+        }
       }
     }
   }

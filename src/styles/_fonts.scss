@@ -32,3 +32,11 @@
 	font-display: swap;
 	src: local('SpoqaHanSansNeo Thin'), url(/fonts/SpoqaHanSansNeo-Thin.otf) format('opentype')
 }
+
+//로고폰트
+@font-face {
+	font-family: 'HakgyoansimTtwimteul';
+	font-weight: 100;
+	font-display: swap;
+	src: url(/fonts/HakgyoansimTtwimteul.otf) format('opentype')
+}

@@ -1,0 +1,42 @@
+.h1,.h2,.h3,.h4,.h5,.p{
+  color: $colorBlack;
+
+  &.gray{
+    color: $colorGray;
+  }
+  &.white{
+    color: $colorWhite;
+  }
+  &.primary{
+    color: $colorPrimary;
+  }
+&.fontSize-xs { font-size: 12px; } 
+&.fontSize-sm { font-size: 13px; } 
+&.fontSize-m  { font-size: 14px; }
+&.fontSize-lg { font-size: 16px; } 
+&.fontSize-xl { font-size: 18px; } 
+}
+
+.h1{
+
+}
+
+.h2{
+
+}
+
+.h3{
+
+}
+
+.h4{
+
+}
+
+.h5{
+
+}
+
+.p{
+  
+}
