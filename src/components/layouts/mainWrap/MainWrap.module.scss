@@ -14,14 +14,22 @@
   &__content{
     flex: 1;
     border: 1px solid;
-    height: 200vh;
   }
   &__aside{
-    width: 240px;
-    border: 1px solid;
+    width: 230px;
+    // border: 1px solid;
     align-self: baseline;
     position: sticky;
     top: 30px;
     left: 0;
+    border: 1px solid $colorGray;
+    border-radius: 4px;
+    >div{
+      padding: 14px;
+
+      &:not(:first-child){
+        border-top: 1px solid $colorGray;
+      }
+    }
   }
 }

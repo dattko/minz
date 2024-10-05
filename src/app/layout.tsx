@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import MainWrap from '@/components/layouts/mainWrap/MainWrap';
 import '@style/globals.scss';
-
+import { AuthProvider } from '@/contexts/auth/AuthContext';
 
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -53,9 +53,11 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <MainWrap>
-            {children}
-        </MainWrap>
+        <AuthProvider>
+          <MainWrap>
+              {children}
+          </MainWrap>
+        </AuthProvider>
       </body>
     </html>
   );

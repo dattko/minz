@@ -18,4 +18,9 @@ a{text-decoration:none; cursor: pointer; color: #000;}
 table {border-collapse:collapse;border-spacing:0}
 *:after,*::before{display: flex; }
 a,span{color: $colorBlack;}
-input, textarea{border: none;outline:none; height: 100%;  font-family: SpoqaHanSansNeo, sans-serif; font-size: 13px; flex: 1;  border-radius: 4px; padding: 0 12px;}
+input:not( 
+  [type="checkbox"]
+  [type="radio"]
+  [type="file"]
+  [type="date"]
+), textarea{border: none;outline:none; height: 100%;  font-family: SpoqaHanSansNeo, sans-serif; font-size: 13px; flex: 1;  border-radius: 4px; padding: 0 8px;}

@@ -2,7 +2,7 @@
   color: $colorBlack;
 
   &.gray{
-    color: $colorGray;
+    color: $colorGrayDark;
   }
   &.white{
     color: $colorWhite;
@@ -10,9 +10,9 @@
   &.primary{
     color: $colorPrimary;
   }
-&.fontSize-xs { font-size: 12px; } 
-&.fontSize-sm { font-size: 13px; } 
-&.fontSize-m  { font-size: 14px; }
+&.fontSize-xs { font-size: 11px; } 
+&.fontSize-sm { font-size: 12px; } 
+&.fontSize-m  { font-size: 13px; }
 &.fontSize-lg { font-size: 16px; } 
 &.fontSize-xl { font-size: 18px; } 
 }

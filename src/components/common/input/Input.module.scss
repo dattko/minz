@@ -1,0 +1,44 @@
+.input{
+  &__wrap{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+    // border: 1px solid red;
+    height: 32px;
+  }
+  &__label{
+    white-space: nowrap;
+    font-weight: 500;
+    max-width: 30%;
+
+  }
+  &__field{
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: 1px solid $colorGray;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    input{
+      height: 100%;
+      min-width: 0;
+      font-size: 12px;
+      flex: 1;
+      &::placeholder{
+        color: $colorGrayDark;
+      }
+      &:disabled{
+        background-color: rgba($color: $colorGray, $alpha: 0.4);
+      }
+    }
+  }
+  &__btn{
+    height: 100%;
+    background-color: $colorGray;
+    white-space: nowrap;
+
+  }
+}
