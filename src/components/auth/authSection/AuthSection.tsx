@@ -1,18 +1,22 @@
-'use client';
-import React from 'react';
-import LoginForm from '@/components/auth/loginForm/LoginForm';
-import UserProfile from '@/components/auth/userProfile/UserProfile';
+import UserProfile from '../userProfile/UserProfile';
+import LoginForm from '../loginForm/LoginForm';
 import styles from './AuthSection.module.scss';
-import { useAuth } from '@/contexts/auth/AuthContext';
+import { createClient } from '@/lib/supabase/supabaseServer';
 
-const AuthSection: React.FC = () => {
-  const { user } = useAuth();
+const AuthSection = async () => {
+  const supabase = createClient()
 
+  const { data, error } = await supabase.auth.getUser()
 
+  const isAuthenticated = data?.user
 
   return (
-    <div className={styles.authSection}>
-      {user ? <UserProfile /> : <LoginForm />}
+    <div className={styles.section}>
+      {isAuthenticated ? (
+        <UserProfile/>
+      ) : (
+        <LoginForm />
+      )}
     </div>
   );
 };

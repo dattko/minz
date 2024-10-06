@@ -1,13 +1,13 @@
-import { db } from '@/lib/firebaseAdmin'; 
 import Link from 'next/link';
 import styles from './Header.module.scss';
 import HeaderSearch from './HeaderSerach';
 import Text from '@/components/text/Text';
 import { MenuItem } from '@/types/menu';
+import { supabaseUrl, supabaseKey } from '@/lib/supabase/supabase';
+
 
 const Header = async () => {
   const menuItems = await fetchMenuItems();
-
   return (
     <>
       <header className={styles.header}>
@@ -36,16 +36,16 @@ const Header = async () => {
 };
 
 const fetchMenuItems = async (): Promise<MenuItem[]> => {
-  try {
-    const menuCollection = db.collection('menus');
-    const snapshot = await menuCollection.orderBy('order', 'asc').get();
-    
-    const menuItems = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    })) as MenuItem[];
 
-    return menuItems;
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/menus`, {
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+      },
+    });
+    const data = await response.json();
+    return data as MenuItem[];
   } catch (error) {
     console.error("메뉴 불러오기 실패 :", error);
     return [];

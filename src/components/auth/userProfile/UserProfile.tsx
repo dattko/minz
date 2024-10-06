@@ -1,16 +1,20 @@
 import React from 'react';
-import { useAuth } from '@/contexts/auth/AuthContext';
 import Btn from '@/components/common/button/Btn';
+// import { logout } from '../authSection/action';
+import { createClient } from '@/lib/supabase/supabaseServer';
+import LogoutBtn from './LogoutBtn';
 
 
-const UserProfile: React.FC = () => {
-  const { user, logout } = useAuth();
+const UserProfile = async () => {
+  const supabase = createClient()
+  const { data } = await supabase.auth.getUser()
+
 
 
   return (
     <div >
-        {user?.email}
-        <Btn onClick={logout}>로그아웃</Btn>
+        {data?.user?.email}
+        <LogoutBtn/>
     </div>
   );
 }

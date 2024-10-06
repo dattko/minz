@@ -1,78 +1,86 @@
-import React, { useState, useEffect } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+'use client'
+import React, { useEffect, useState } from 'react';
 import Btn from '@/components/common/button/Btn';
-import Text from '@/components/text/Text';
-import { Input, CheckBox } from '@/components/common/input';
+import { Input } from '@/components/common/input';
 import styles from './LoginForm.module.scss';
+import { login } from '../authSection/action';
+import { createClient } from '@/lib/supabase/supabaseClient';
+import { useRouter } from 'next/navigation';
+import Checkbox from '@/components/common/input/CheckBox';
 
 const LoginForm = () => {
+  const router = useRouter();
+  const supabase = createClient();
   const [email, setEmail] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState('');
 
   useEffect(() => {
+    // 저장된 이메일 불러오기
     const savedEmail = localStorage.getItem('savedEmail');
     if (savedEmail) {
       setEmail(savedEmail);
       setRememberMe(true);
     }
-  }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError('');
-
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      if (rememberMe) {
-        localStorage.setItem('savedEmail', email);
-      } else {
-        localStorage.removeItem('savedEmail');
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') {
+        console.log('로그인 감지됨');
+        router.refresh();
       }
-      console.log('로그인 성공');
-    } catch (error) {
-      setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
-      console.error('로그인 에러 발생');
-    }
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, [router]);
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
   };
 
-  const rememberId = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRememberMeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRememberMe(e.target.checked);
-    if (!e.target.checked) {
+  };
+
+  const handleSubmit = async (formData: FormData) => {
+    if (rememberMe) {
+      localStorage.setItem('savedEmail', email);
+    } else {
       localStorage.removeItem('savedEmail');
     }
+
+    // 서버 액션 호출
+    await login(formData);
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.loginForm}>
+    <form className={styles.loginForm} action={handleSubmit}>
       <Input
-        type='email'
-        name='email'
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        id="email" 
+        name="email" 
+        type="email" 
         required 
         placeholder='이메일(아이디)'
+        value={email}
+        onChange={handleEmailChange}
       />
       <Input
-        type='password'
-        name='password'
+        id="password" 
+        name="password" 
+        type="password" 
         required
         placeholder='비밀번호'
       />
       <div className={styles.login__option}>
-        <CheckBox 
-          label='아이디 저장' 
+        <Checkbox 
+          id='saveid' 
+          name='saveid' 
+          label='아이디 저장'
           checked={rememberMe}
-          onChange={rememberId}
+          onChange={handleRememberMeChange}
         />
-        <Btn variant='primary'>로그인</Btn>
+        <Btn size='small' type="submit">로그인</Btn>
       </div>
-      {error && <Text variant='p' className={styles.errorMessage}>{error}</Text>}
     </form>
   );
 };

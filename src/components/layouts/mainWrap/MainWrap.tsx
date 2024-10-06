@@ -1,14 +1,13 @@
 import React from 'react';
 import styles from './MainWrap.module.scss';
 import Header from '../header/Header';
-import LoginForm from '@/components/auth/loginForm/LoginForm';
 import AuthSection from '@/components/auth/authSection/AuthSection';
 interface MainWrapProps {
   children: React.ReactNode;
 }
 
 const MainWrap: React.FC<MainWrapProps> = ({ children }) => {
-  console.log(process.env.NEXT_PUBLIC_FIREBASE_API_KEY)
+
   return (
     <div className={styles.main__wrap}>
       <Header />
