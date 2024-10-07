@@ -4,8 +4,13 @@
     gap: 8px;
     align-items: center;
     width: 100%;
-    // border: 1px solid red;
     height: 32px;
+    min-width: 0;
+  }
+  &__box{
+    height: 100%;;
+    flex: 1;
+    min-width: 0;
   }
   &__label{
     white-space: nowrap;
@@ -42,6 +47,10 @@
     height: 100%;
     background-color: $colorGray;
     white-space: nowrap;
-
+    font-size: 12px;
+    color: $colorNavy;
+    &:hover{
+      background-color: $colorGrayDark;
+    }
   }
 }

@@ -2,13 +2,23 @@
   color: $colorBlack;
 
   &.gray{
-    color: $colorGrayDark;
+    color: #868e96;
   }
   &.white{
     color: $colorWhite;
   }
   &.primary{
     color: $colorPrimary;
+  }
+  &.underline{
+    &:hover{
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+  }
+  &.ellipsis{
+    @include ellipsis;
+    width: 100%;
   }
 &.fontSize-xs { font-size: 11px; } 
 &.fontSize-sm { font-size: 12px; } 
@@ -30,7 +40,8 @@
 }
 
 .h4{
-
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .h5{

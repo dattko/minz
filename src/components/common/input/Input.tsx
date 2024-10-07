@@ -6,9 +6,6 @@ import Text from '@/components/text/Text';
 
 
 const Input: React.FC<InputProps> = ({
-  label,
-  labelWidth = '25%',
-  labelAlign = 'right',
   type = 'text',
   btnTitle,
   btnClick,
@@ -24,12 +21,7 @@ const Input: React.FC<InputProps> = ({
   const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <div className={`${styles.input__wrap} ${className} ${disabled ? styles.disabled : ''}`}>
-      {label && (
-        <label className={`${styles.input__label} ${required ? styles.required : ''}`} style={{width: `${labelWidth}`, textAlign: `${labelAlign}`}}>
-          <Text variant='p'>{label}</Text>
-        </label>
-      )}
+    <div className={`${styles.input__box} ${className} ${disabled ? styles.disabled : ''}`}>
       <div className={`${styles.input__field} ${isFocused ? styles.focused : ''} ${error ? styles.error : ''}`}>
         <input
           type={type}

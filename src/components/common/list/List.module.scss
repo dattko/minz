@@ -1,0 +1,37 @@
+.list{
+
+  &__ul{
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__li{
+    display: flex;
+    justify-content: space-between;
+    height: 32px;
+    border-bottom: 1px solid $colorGray;
+    align-items: center;
+    gap: 12px;
+
+    &:last-child{
+      border-bottom: none;
+    }
+    >div{
+    }
+  }
+  &__title{
+    flex: 1;
+    min-width: 0;
+    max-width: 60%;
+    a{
+      display: inline-block;
+      max-width: 100%;
+      &:hover{
+        p{
+          color: $colorPrimary;
+        }
+      }
+    }
+
+  }
+}

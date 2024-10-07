@@ -1,12 +1,13 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import Btn from '@/components/common/button/Btn';
-import { Input } from '@/components/common/input';
+import { Input, CheckBox, InputWrap } from '@/components/common/input';
 import styles from './LoginForm.module.scss';
 import { login } from '../authSection/action';
 import { createClient } from '@/lib/supabase/supabaseClient';
 import { useRouter } from 'next/navigation';
-import Checkbox from '@/components/common/input/CheckBox';
+import Text from '@/components/text/Text';
+import Link from 'next/link';
 
 const LoginForm = () => {
   const router = useRouter();
@@ -55,31 +56,35 @@ const LoginForm = () => {
 
   return (
     <form className={styles.loginForm} action={handleSubmit}>
-      <Input
-        id="email" 
-        name="email" 
-        type="email" 
-        required 
-        placeholder='이메일(아이디)'
-        value={email}
-        onChange={handleEmailChange}
-      />
-      <Input
-        id="password" 
-        name="password" 
-        type="password" 
-        required
-        placeholder='비밀번호'
-      />
+      <InputWrap>
+        <Input
+          id="email" 
+          name="email" 
+          type="email" 
+          required 
+          placeholder='이메일(아이디)'
+          value={email}
+          onChange={handleEmailChange}
+        />
+      </InputWrap>
+      <InputWrap>
+        <Input
+          id="password" 
+          name="password" 
+          type="password" 
+          required
+          placeholder='비밀번호'
+        />
+      </InputWrap>
       <div className={styles.login__option}>
-        <Checkbox 
+        <CheckBox 
           id='saveid' 
           name='saveid' 
           label='아이디 저장'
           checked={rememberMe}
           onChange={handleRememberMeChange}
         />
-        <Btn size='small' type="submit">로그인</Btn>
+        <Btn size='small'variant='primary' type="submit">로그인</Btn>
       </div>
     </form>
   );

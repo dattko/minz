@@ -1,0 +1,19 @@
+.content{
+  &__wrap{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    min-width: 0;
+    flex: 1;
+    gap: $contentGap;
+
+    @for $i from 2 through 5 {
+      &.col-#{$i} {
+        > div {
+          max-width: calc((100% - #{($i - 1) * $contentGap}) / #{$i});
+        }
+      }
+    }
+  }
+
+}

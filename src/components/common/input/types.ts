@@ -1,5 +1,13 @@
 import { InputHTMLAttributes } from 'react';
 
+export interface InputWrapProps {
+  children: React.ReactNode;
+  label?: string;
+  required?: boolean;
+  labelWidth?: string;
+  labelAlign?: 'left' | 'right' | 'center';
+}
+
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   type?: string;

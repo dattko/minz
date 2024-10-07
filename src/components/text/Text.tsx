@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Text.module.scss';
+import { Eclipse } from 'lucide-react';
 
 type FontSize = 'xs' | 'sm' | 'm' | 'lg' | 'xl';
 
@@ -9,16 +10,20 @@ interface TextProps {
   className?: string;
   color?: string;
   fontSize?: FontSize;
+  underline?: boolean;
+  ellipsis?: boolean;
 }
 
-const Text: React.FC<TextProps> = ({ variant, children, color, fontSize = 'm', className }) => {
+const Text: React.FC<TextProps> = ({ variant, children, color, fontSize = 'm', underline, ellipsis, className }) => {
   const Component = variant;
   return (
     <Component 
       className={`
         ${styles[variant]} 
         ${color && styles[color]} 
-        ${fontSize && styles[`fontSize-${fontSize}`]} 
+        ${variant === 'p' && fontSize && styles[`fontSize-${fontSize}`]} 
+        ${underline && styles.underline}
+        ${ellipsis && styles.ellipsis}
         ${className || ''}
       `}
     >

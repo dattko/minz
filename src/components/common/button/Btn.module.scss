@@ -4,7 +4,6 @@
   justify-content: center;
   font-weight: 500;
   border-radius: 4px;
-  align-self: baseline;
   &:disabled {
     opacity: 0.6;
     cursor: default;
@@ -30,7 +29,7 @@
 
 .secondary {
   background-color: $colorGray;
-  color: $colorWhite;
+  color: $colorNavy;
 
   &:hover:not(:disabled) {
     background-color: $colorGrayDark;

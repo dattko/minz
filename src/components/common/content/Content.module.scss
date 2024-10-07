@@ -1,0 +1,13 @@
+.content{
+  width: 100%;
+  &__box{
+    border: 1px solid $colorGray;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: $contentGap;
+    width: 100%;
+    min-width: 0;
+    padding: 20px $contentGap $contentGap;
+  }
+}

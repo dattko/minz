@@ -13,7 +13,11 @@
 
   &__content{
     flex: 1;
-    border: 1px solid;
+    // border: 1px solid $colorGray;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-radius: 4px;
   }
   &__aside{
     width: 230px;
@@ -25,7 +29,7 @@
     border: 1px solid $colorGray;
     border-radius: 4px;
     >div{
-      padding: 14px;
+      padding: $contentGap;
 
       &:not(:first-child){
         border-top: 1px solid $colorGray;
