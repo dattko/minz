@@ -16,6 +16,7 @@
   &.loading {
     cursor: wait;
   }
+  
 }
 
 .primary {
@@ -70,6 +71,17 @@
 .large {
   height: 36px;
   font-size: 14px;
+}
+
+.icon{
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  svg{
+    width: 13px;
+    height: 13px;
+    color: $colorBlack;
+  }
 }
 
 .spinner {

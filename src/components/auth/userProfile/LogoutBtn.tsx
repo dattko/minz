@@ -25,7 +25,7 @@ const LogoutBtn = () => {
     }
   }
 
-  return <Btn onClick={handleLogout}>로그아웃</Btn>
+  return <Btn size='small' onClick={handleLogout}>로그아웃</Btn>
 }
 
 export default LogoutBtn

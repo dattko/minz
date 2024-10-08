@@ -6,7 +6,7 @@ interface SupabaseAuthError extends Error {
 }
 
 async function createOrVerifyDefaultUser(): Promise<User | null> {
-  const defaultEmail = 'minz@minz.com';
+  const defaultEmail = 'minzdev@minz.com';
   const defaultPassword = 'minz123';
 
   try {

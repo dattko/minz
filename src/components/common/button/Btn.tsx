@@ -3,7 +3,7 @@ import styles from './Btn.module.scss';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline-primary' | 'outline-secondary';
-  size?: 'small' | 'medium' | 'large';
+  size?: 'small' | 'medium' | 'large' | 'icon';
   fullWidth?: boolean;
   isLoading?: boolean;
 }
