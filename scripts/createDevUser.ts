@@ -6,8 +6,10 @@ interface SupabaseAuthError extends Error {
 }
 
 async function createOrVerifyDefaultUser(): Promise<User | null> {
-  const defaultEmail = 'minzdev@minz.com';
+  const defaultEmail = 'minz@minz.com';
   const defaultPassword = 'minz123';
+  const defaultName = 'Dev Minz';
+  const defaultNickname = 'Minz';
 
   try {
     // 이메일로 사용자 조회
@@ -26,13 +28,29 @@ async function createOrVerifyDefaultUser(): Promise<User | null> {
       email: defaultEmail,
       password: defaultPassword,
       email_confirm: true,
-      user_metadata: { name: 'Dev Minz' },
+      user_metadata: { name: defaultName, nickname: defaultNickname },
     });
 
     if (createError) throw createError;
 
     if (!newUser) {
       throw new Error('생성 실패');
+    }
+
+    // userinfo 테이블에 데이터 삽입
+    const { error: insertError } = await supabaseAdmin
+      .from('userinfo')
+      .upsert({
+        id: newUser.user.id,
+        email: newUser.user.email,
+        name: defaultName,
+        nickname: defaultNickname,
+      });
+
+    if (insertError) {
+      console.error('userinfo 테이블 삽입 실패:', insertError);
+      // 사용자는 생성되었지만 userinfo 삽입에 실패한 경우 처리 방법 결정 필요
+      // 예: 사용자 삭제 또는 나중에 재시도 로직 추가
     }
 
     console.log('생성 성공 :', newUser.user?.email);
@@ -45,4 +63,4 @@ async function createOrVerifyDefaultUser(): Promise<User | null> {
   }
 }
 
-createOrVerifyDefaultUser()
+createOrVerifyDefaultUser();

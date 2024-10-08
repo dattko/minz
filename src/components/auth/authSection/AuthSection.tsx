@@ -8,7 +8,7 @@ const AuthSection = async () => {
   const supabase = createClient()
 
   const { data, } = await supabase.auth.getUser()
-  const { data: { session } } = await supabase.auth.getSession();
+  // const { data: { session } } = await supabase.auth.getSession();
 
   const isAuthenticated = data?.user
 

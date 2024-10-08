@@ -38,7 +38,7 @@ const Header = async () => {
 const fetchMenuItems = async (): Promise<MenuItem[]> => {
 
   try {
-    const response = await fetch(`${supabaseUrl}/rest/v1/menus`, {
+    const response = await fetch(`${supabaseUrl}/rest/v1/menu_items`, {
       headers: {
         'apikey': supabaseKey,
         'Authorization': `Bearer ${supabaseKey}`,

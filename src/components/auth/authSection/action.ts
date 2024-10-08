@@ -4,6 +4,24 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/supabaseServer'
 import { supabaseAdmin } from '@/lib/supabase/supabaseAdmin'
 
+type State = {
+  errorMsg?: {
+    email?: string;
+    password?: string;
+    name?: string;
+    nickname?: string;
+  };
+};
+
+type UserType = 'nomal' | 'admin'; 
+
+const ERROR_MESSAGE = {
+  emailAlreadyExists: '이 이메일은 이미 등록되어 있습니다. 로그인 해주세요.',
+  invalidEmail: '유효한 이메일 주소를 입력해주세요.',
+  weakPassword: '비밀번호가 너무 약합니다. 더 강력한 비밀번호를 선택해주세요.',
+  unexpectedError: '예상치 못한 오류가 발생했습니다. 나중에 다시 시도해주세요.'
+};
+
 export async function login(formData: FormData) {
   const supabase = createClient()
 
@@ -25,6 +43,7 @@ export async function logout() {
   const supabase = createClient()
 
   const { error } = await supabase.auth.signOut()
+
   if (error) {
     console.error('로그아웃 실패:', error.message)
     return { success: false, error: error.message }
@@ -32,66 +51,58 @@ export async function logout() {
   
   console.log('로그아웃 성공')
   revalidatePath('/', 'layout')
-  return { success: true }
+  redirect('/')
 }
 
 
-export async function signup(formData: FormData): Promise<{ success: boolean; error?: string }> {
-  const supabase = createClient()
+export async function signup(prevState: State, formData: FormData): Promise<State> {
+  const userType = formData.get("userType") as UserType;
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+  const name = formData.get('name') as string;
+  const nickname = formData.get('nickname') as string;
+  const supabase = createClient();
+  const errorMsg: State['errorMsg'] = {};
 
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-    name: formData.get('name') as string,
-    cellphone: formData.get('cellphone') as string,
-  };
 
-  // 트랜잭션 시작
-  const { data: signUpData, error: authError } = await supabase.auth.signUp({
-    email: data.email,
-    password: data.password,
-  });
+  try {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name,
+          nickname,
+        },
+      },
+    });
 
-  if (authError) {
-    return { success: false, error: authError.message };
-  }
-
-  const user = signUpData.user;
-
-  if (user) {
-    // profiles 테이블에 사용자 정보 upsert
-    const { error: profileError } = await supabaseAdmin
-      .from('profiles')
-      .upsert({
-        id: user.id,
-        name: data.name,
-        cellphone: data.cellphone,
-      }, {
-        onConflict: 'id', // 'id' 컬럼에 충돌이 있을 경우 업데이트
-      });
-
-    if (profileError) {
-      // 프로필 생성 실패 시 사용자 삭제 (롤백)
-      await supabaseAdmin.auth.admin.deleteUser(user.id);
-      return { success: false, error: profileError.message };
+    // 서버 에러 처리
+    if (error) {
+      if (error.message.includes('User already registered')) {
+        errorMsg.email = ERROR_MESSAGE.emailAlreadyExists;
+      } else if (error.message.includes('invalid email')) {
+        errorMsg.email = ERROR_MESSAGE.invalidEmail;
+      } else if (error.message.includes('password is too weak')) {errorMsg.password = ERROR_MESSAGE.weakPassword;
+      }else if (password.length < 6) {
+        errorMsg.password = '비밀번호는 최소 6자 이상이어야 합니다.';
+      } else {
+        console.error('인증 오류:', error);
+        return { errorMsg: { email: ERROR_MESSAGE.unexpectedError } };
+      }
     }
-  } else {
-    return { success: false, error: "User creation failed" };
+
+    if (Object.keys(errorMsg).length > 0) {
+      return { errorMsg };
+    }
+
+  } catch (error) {
+    console.error('가입 중 예상치 못한 오류 발생:', error);
+    return { errorMsg: { email: ERROR_MESSAGE.unexpectedError } };
   }
 
-  return { success: true };
+  console.log('회원가입 성공');
+  revalidatePath('/', 'layout');
+  return redirect('/'); // 회원가입에 성공 시 메인 페이지로 이동
 }
 
-
-
-export async function checkEmailExists(email: string) {
-  const { data, error } = await supabaseAdmin.auth.admin.listUsers();
-
-  if (error) {
-    console.error('이메일 확인 중 오류 발생:', error.message);
-    return { exists: false, error: error.message };
-  }
-
-  const exists = data?.users?.some((user) => user.email === email);
-  return { exists, error: null };
-}
