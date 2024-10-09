@@ -11,7 +11,7 @@ interface MainWrapProps {
 const MainWrap: React.FC<MainWrapProps> = ({ children }) => {
   const headersList = headers();
   const pathname = headersList.get('X-Pathname')
-  const postStartPathname = pathname?.startsWith('/post');
+  const postStartPathname = pathname?.startsWith('/posts');
 
 
 

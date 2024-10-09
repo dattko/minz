@@ -1,5 +1,5 @@
 import React from 'react';
-import PostDetail from '@/components/common/post/PostDetail';
+import PostDetail from '@/components/common/posts/PostsDetail';
 
 const noticePage = () => {
   // 임시 데이터

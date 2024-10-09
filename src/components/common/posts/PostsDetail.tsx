@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './PostDetail.module.scss';
+import styles from './PostsDetail.module.scss';
 import { User } from 'lucide-react'; 
 import { formatDate } from '@/utils/utils';
 import { PostProps } from '@/types/dataType';
