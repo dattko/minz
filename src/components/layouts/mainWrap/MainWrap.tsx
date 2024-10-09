@@ -2,11 +2,18 @@ import React from 'react';
 import styles from './MainWrap.module.scss';
 import Header from '../header/Header';
 import AuthSection from '@/components/auth/authSection/AuthSection';
+import Text from '@/components/text/Text';
+import { headers } from 'next/headers'
 interface MainWrapProps {
   children: React.ReactNode;
 }
 
 const MainWrap: React.FC<MainWrapProps> = ({ children }) => {
+  const headersList = headers();
+  const pathname = headersList.get('X-Pathname')
+  const postStartPathname = pathname?.startsWith('/post');
+
+
 
   return (
     <div className={styles.main__wrap}>
@@ -14,6 +21,11 @@ const MainWrap: React.FC<MainWrapProps> = ({ children }) => {
       <div className={styles.main__container}>
         <div className={styles.main}>
           <div className={styles.main__content}>
+            {postStartPathname &&
+              <div className={styles.main__content__header}>
+                <Text variant='h2'>메인</Text>
+              </div>
+            }
             {children}
           </div>
           <div className={styles.main__aside}>

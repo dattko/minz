@@ -1,4 +1,6 @@
-export const fetchSupabaseData = async (tableName: string) => {
+
+
+export const fetchSupabaseData = async (data: string) => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -6,7 +8,7 @@ export const fetchSupabaseData = async (tableName: string) => {
     throw new Error('Supabase URL or Anon Key is not defined');
   }
 
-  const response = await fetch(`${supabaseUrl}/rest/v1/${tableName}`, {
+  const response = await fetch(`${supabaseUrl}/rest/v1/${data}`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${supabaseAnonKey}`,
@@ -27,7 +29,7 @@ export const fetchSupabaseData = async (tableName: string) => {
 
 // async function UserList() {
 //   try {
-//     const users = await fetchDataFromSupabase('users');
+//     const users = await fetchSupabaseData('users');
 
 //     return (
 //       <div>
@@ -51,7 +53,7 @@ export const fetchSupabaseData = async (tableName: string) => {
 
 
 // import { GetServerSideProps } from 'next';
-// import { fetchDataFromSupabase } from '@/lib/supabase/api';
+// import { fetchSupabaseData } from '@/lib/supabase/api';
 
 // interface User {
 //   id: string;
@@ -65,7 +67,7 @@ export const fetchSupabaseData = async (tableName: string) => {
 
 // export const getServerSideProps: GetServerSideProps<UserListProps> = async () => {
 //   try {
-//     const users = await fetchDataFromSupabase('users');
+//     const users = await fetchSupabaseData('users');
 //     return { props: { users } };
 //   } catch (error) {
 //     console.error('데이터를 가져오는 중 오류 발생:', error);

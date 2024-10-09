@@ -1,0 +1,42 @@
+.post {
+
+  &__detail{
+    padding-right: 30px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+  }
+  &__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__author {
+      display: flex;
+      align-items: center;
+    }
+  }
+  
+  &__content {
+    font-size: 16px;
+  }
+
+  &__footer {
+      padding-top: 1rem;
+  
+
+    }
+  &__stats {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+
+}

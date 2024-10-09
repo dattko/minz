@@ -5,16 +5,16 @@ import List, {ListItem} from '@/components/common/list/List';
 
 export default function Home() {
   const noticeItems: ListItem[] = [
-    { id: 1, title: '공지사항 1', date: '2023-06-01', views: 100, link: '/notice/1' },
-    { id: 2, title: '공지사항 2', date: '2023-06-02', views: 150, link: '/notice/2' },
-    { id: 3, title: '공지사항 2', date: '2023-06-02', views: 150, link: '/notice/2' },
-    { id: 4, title: '공지사항 2', date: '2023-06-02', views: 150, link: '/notice/2' },
-    { id: 5, title: '공지사항 2', date: '2023-06-02', views: 150, link: '/notice/2' },
-    { id: 6, title: '공지사항 2', date: '2023-06-02', views: 150, link: '/notice/2' },
+    { id: 1, title: '공지사항 1', date: '2023-06-01', views: 100, link: '/posts/view/notice', comments: 10 },
+    { id: 2, title: '공지사항 2', date: '2023-06-02', views: 150, link: '/posts/view/notice' },
+    { id: 3, title: '공지사항 2', date: '2023-06-02', views: 150, link: '/posts/view/notice' },
+    { id: 4, title: '공지사항 2', date: '2023-06-02', views: 150, link: '/posts/view/notice' },
+    { id: 5, title: '공지사항 2', date: '2023-06-02', views: 150, link: '/posts/view/notice' },
+    { id: 6, title: '공지사항 2', date: '2023-06-02', views: 150, link: '/posts/view/notice' },
   ];
 
   const bestItems: ListItem[] = [
-    { id: 1, title: '인기글 1 assss인기글 1 assss인기글 1 assss인기글 1 assss인기글 1 assss', date: '2023-06-01', views: 500, link: '/best/1' },
+    { id: 1, title: '인기글 1 assss인기글 1 assss인기글 1 assss인기글 1 assss인기글 1 assss', date: '2023-06-01', views: 500, link: '/best/1' , comments: 120},
     { id: 2, title: '인기글 2', date: '2023-06-02', views: 450, link: '/best/2' },
 
   ];

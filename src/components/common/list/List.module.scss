@@ -17,15 +17,18 @@
       border-bottom: none;
     }
     >div{
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
   }
   &__title{
     flex: 1;
     min-width: 0;
-    max-width: 60%;
+    display: flex;
     a{
       display: inline-block;
-      max-width: 100%;
+      max-width: 80%;
       &:hover{
         p{
           color: $colorPrimary;
