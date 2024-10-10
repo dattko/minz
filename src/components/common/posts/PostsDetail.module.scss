@@ -1,5 +1,5 @@
-.post {
-
+.posts {
+  
   &__detail{
     padding-right: 30px;
     background-color: #ffffff;
@@ -10,33 +10,61 @@
   &__header {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
+    border-bottom: 1px solid $colorGray;
+    padding-bottom: 14px;
 
+  }
+  &__title{
+    flex: 1;
+    line-height: 1.2;
+    &__wrap{
+      gap: 12px;
+      display: flex;
+      justify-content: space-between;
+
+    }
   }
   &__meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    &__author {
-      display: flex;
-      align-items: center;
-    }
+  }
+  &__author {
+    display: flex;
+    align-items: center;
+    gap: 2px;
   }
   
   &__content {
-    font-size: 16px;
+    font-size: 14px;
+    padding: 30px 0;
   }
 
+  &__option {
+    display: flex;
+    justify-content: space-between;
+    > div {
+      display: flex;
+      gap: 4px;
+    }
+  }
   &__footer {
-      padding-top: 1rem;
   
 
     }
   &__stats {
     display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  &__stat {
+    display: flex;
+    align-self: baseline;
+    align-items: center;
+    gap: 4px;
   }
 
 }

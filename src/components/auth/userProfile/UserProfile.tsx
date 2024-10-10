@@ -6,7 +6,7 @@ import Text from '@/components/text/Text';
 import Btn from '@/components/common/button/Btn';
 import { Settings } from 'lucide-react';
 import { fetchSupabaseData } from '@/lib/supabase/api';
-import { userProps } from '@/types/dataType';
+import { user } from '@/types/dataType';
 
 
 
@@ -19,7 +19,7 @@ const UserProfile: React.FC = async () => {
   }
 
   try {
-    const users:userProps[] = await fetchSupabaseData(`userinfo?id=eq.${data.user?.id}`);
+    const users:user[] = await fetchSupabaseData(`userinfo?id=eq.${data.user?.id}`);
     const user = users[0];
 
     if (!user) {

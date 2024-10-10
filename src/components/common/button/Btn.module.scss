@@ -4,6 +4,7 @@
   justify-content: center;
   font-weight: 500;
   border-radius: 4px;
+  gap: 4px;
   &:disabled {
     opacity: 0.6;
     cursor: default;
@@ -22,18 +23,29 @@
 .primary {
   background-color: $colorPrimary;
   color: $colorWhite;
-
+  svg{
+    color: $colorWhite;
+  }
   &:hover:not(:disabled) {
     background-color: #0056b3;
   }
 }
 
 .secondary {
-  background-color: $colorGray;
-  color: $colorNavy;
+  background-color: rgba($color: $colorGray, $alpha: .3);
+  color: #6b6b6b;
+  border: 1px solid $colorGray;
 
   &:hover:not(:disabled) {
-    background-color: $colorGrayDark;
+    background-color: $colorGray;
+  }
+}
+
+.accent{
+  background-color: $colorAccent;
+  color: $colorWhite;
+  &:hover:not(:disabled) {
+    background-color: #ff6b6b;
   }
 }
 
@@ -51,7 +63,7 @@
 .outline-secondary {
   background-color: transparent;
   border: 1px solid $colorGray;
-  color: $colorGray;
+  color: #6b6b6b;
 
   &:hover:not(:disabled) {
     background-color: $colorGray;
@@ -59,17 +71,31 @@
   }
 }
 
+.outline-accent {
+  background-color: transparent;
+  border: 1px solid $colorAccent;
+  color: $colorAccent;
+
+  &:hover:not(:disabled) {
+    background-color: $colorAccent;
+    color: $colorWhite;
+  }
+}
+
+
 .small {
+  height: 24px;
+  font-size: 11px;
+}
+
+.medium {
+ 
   height: 28px;
   font-size: 12px;
 }
 
-.medium {
-  height: 32px;
-}
-
 .large {
-  height: 36px;
+  height: 32px;
   font-size: 14px;
 }
 
@@ -80,6 +106,17 @@
   svg{
     width: 13px;
     height: 13px;
+  }
+}
+
+.none{
+  background-color: transparent;
+  color: $colorGrayDark;
+  height: auto ;
+  width: auto;
+  padding: 0 4px;
+  &:hover:not(:disabled) {
+    background-color: transparent;
     color: $colorBlack;
   }
 }

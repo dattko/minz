@@ -84,7 +84,7 @@ const LoginForm = () => {
           checked={rememberMe}
           onChange={handleRememberMeChange}
         />
-        <Btn size='small'variant='primary' type="submit">로그인</Btn>
+        <Btn size='small' type="submit">로그인</Btn>
       </div>
     </form>
   );

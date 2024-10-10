@@ -21,11 +21,11 @@ const MainWrap: React.FC<MainWrapProps> = ({ children }) => {
       <div className={styles.main__container}>
         <div className={styles.main}>
           <div className={styles.main__content}>
-            {postStartPathname &&
+            {/* {postStartPathname &&
               <div className={styles.main__content__header}>
                 <Text variant='h2'>메인</Text>
               </div>
-            }
+            } */}
             {children}
           </div>
           <div className={styles.main__aside}>

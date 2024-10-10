@@ -3,15 +3,15 @@ import React from 'react';
 import styles from './Btn.module.scss';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline-primary' | 'outline-secondary';
-  size?: 'small' | 'medium' | 'large' | 'icon';
+  variant?: 'primary' | 'secondary' | 'outline-primary' | 'outline-secondary' | 'none' | 'accent' | 'outline-accent';
+  size?: 'small' | 'medium' | 'large' | 'icon' | 'none';
   fullWidth?: boolean;
   isLoading?: boolean;
 }
 
 const Btn: React.FC<ButtonProps> = ({
   children,
-  variant = 'primary',
+  variant = 'secondary',
   size = 'medium',
   fullWidth = false,
   isLoading = false,

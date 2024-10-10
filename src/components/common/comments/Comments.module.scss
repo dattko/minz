@@ -1,0 +1,95 @@
+.comments {
+  
+  
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-bottom: 1px solid $colorGray;
+    padding-bottom: 14px;
+  }
+  &__list {
+    list-style-type: none;
+    padding: 0;
+
+  }
+  
+  &__item {
+    border-bottom: 1px solid $colorGray;
+    flex: 1;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba($color: $colorGray, $alpha: .3);
+    padding: 8px 6px;
+  }
+  &__author {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  &__text{
+    padding: 12px 6px;
+    display: flex;
+    gap: 6px;
+    line-height: 16px;
+    flex: 1;
+  }
+
+  &__form {
+    padding-top: 12px;
+    border-top: 1px solid $colorGray;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  
+  &__input {
+    width: 100%;
+    border: 1px solid $colorGray;
+    padding: 12px 8px;
+    font-size: 12px;
+    resize: none;
+    min-height: 60px;
+    
+    &:focus {
+      outline: none;
+      border-color: $colorPrimary;
+    }
+  }
+  &__reflyItem{
+    display: flex;
+    gap: 8px;
+  }
+
+  &__replyIcon{
+    color: $colorGrayDark;
+    padding-top: 6px;
+  }
+
+  &__replyForm{
+    padding-bottom: 12px;
+    flex-direction: row;
+    align-items: flex-start;
+    display: none;
+  }
+
+  &__submit {
+    background-color: $colorPrimary;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    
+    &:hover {
+      background-color: darken($colorPrimary, 10%);
+    }
+  }
+}

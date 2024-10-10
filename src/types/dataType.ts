@@ -1,5 +1,5 @@
 //유저 타입
-export interface userProps {
+export interface user {
   id: string
   email: string
   name: string
@@ -11,12 +11,13 @@ export interface userProps {
   point: number
 }
 
-//포스트 타입
-export interface PostProps {
-  title: string;
-  content: string;
+
+//댓글 타입
+export interface comment {
+  id?: number;
   author: string;
-  createdAt: string;
-  views: number;
-  likes: number;
+  content: string;
+  createdAt?: string;
+  date: string;
+  replies?: comment[];
 }

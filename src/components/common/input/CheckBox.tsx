@@ -2,6 +2,7 @@ import React, { forwardRef } from 'react';
 import styles from './CheckBox.module.scss';
 import { CheckboxProps } from './types';
 import Text from '@/components/text/Text';
+import { CircleCheck } from 'lucide-react';
 
 
 const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
@@ -21,8 +22,8 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             className={styles.input}
             {...props}
           />
-          <span className={styles.checkbox}></span>
-          <Text fontSize='sm' variant='p' color='gray'>{label}</Text>
+          <CircleCheck className={styles.checkbox}></CircleCheck>
+          <Text fontSize='xs' variant='p' color='gray'>{label}</Text>
         </label>
         {error && <Text variant='p' fontSize='sm'>{error}</Text>}
       </div>
