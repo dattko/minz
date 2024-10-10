@@ -37,6 +37,7 @@
       flex: 1;
       &::placeholder{
         color: $colorGrayDark;
+        font-size: 12px;
       }
       &:disabled{
         background-color: rgba($color: $colorGray, $alpha: 0.4);

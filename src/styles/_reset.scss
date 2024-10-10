@@ -3,6 +3,7 @@ li,ol,ul{list-style: none;}
 html{scroll-behavior: smooth; 
   ::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
     background-color: #F5F7F8;
   }
   ::-webkit-scrollbar-thumb {

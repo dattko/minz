@@ -3,6 +3,7 @@
   &__box{
     border: 1px solid $colorGray;
     border-radius: 4px;
+    // background-color: rgba($color: $colorGray, $alpha: .2);
     display: flex;
     flex-direction: column;
     gap: $contentGap;

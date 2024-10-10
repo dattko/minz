@@ -32,7 +32,7 @@ const UserProfile: React.FC = async () => {
           <Btn size='icon' variant='outline-secondary' className={styles.editProfile}>
             <Settings/>
           </Btn>
-          <Text variant='p' className={styles.username}>{user.email}</Text>
+          <Text variant='p' className={styles.username}>{user.nickname}</Text>
           <Text variant='p' className={styles.level}>Lv: {user.user_level}</Text>
           <Text variant='p' className={styles.points}>포인트: {user.point}</Text>
           <Text variant='p' className={styles.write}>게시글: {user.post_count}</Text>

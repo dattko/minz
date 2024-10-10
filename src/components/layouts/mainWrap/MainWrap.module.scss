@@ -5,7 +5,7 @@
   display: flex;
   gap: 20px;
   &__wrap{
-
+    min-width: 1080px;
   }
   &__container{
     padding: $containerPadding;

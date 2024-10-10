@@ -31,10 +31,13 @@ export default function Home() {
       <Content title='최신 글' >
         ㅁㄴㅇ
       </Content>
+      <Content title='자유 게시판' >
+        ㅁㄴㅇ
+      </Content>
       <Content title='정보 게시판' >
         ㅁㄴㅇ
       </Content>
-      <Content title='자유 게시판' >
+      <Content title='질문 게시판' >
         ㅁㄴㅇ
       </Content>
     </ContentWrap>
