@@ -24,4 +24,6 @@ input:not(
   [type="radio"]
   [type="file"]
   [type="date"]
+  [type="time"]
+  [type="color"]
 ), textarea{border: none;outline:none; height: 100%;  font-family: SpoqaHanSansNeo, sans-serif; font-size: 13px; flex: 1;  border-radius: 4px; padding: 0 8px;}

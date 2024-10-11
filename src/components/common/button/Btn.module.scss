@@ -37,7 +37,7 @@
   border: 1px solid $colorGray;
 
   &:hover:not(:disabled) {
-    background-color: $colorGray;
+    background-color: rgba($color: $colorGray, $alpha: .6);
   }
 }
 
@@ -66,8 +66,8 @@
   color: #6b6b6b;
 
   &:hover:not(:disabled) {
-    background-color: $colorGray;
-    color: $colorWhite;
+    background-color: rgba($color: $colorGray, $alpha: .3);
+    // color: $colorWhite;
   }
 }
 
