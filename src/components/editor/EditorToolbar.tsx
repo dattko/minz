@@ -36,6 +36,26 @@ const ToggleGroupItem: React.FC<{ value: string; onClick: () => void; isActive: 
   </button>
 );
 
+const FontSizeDropdown: React.FC<{ editor: any }> = ({ editor }) => {
+  const fontSizes = ['8px', '10px', '12px', '14px', '16px', '18px', '20px', '24px', '30px', '36px', '48px', '60px', '72px'];
+  
+  return (
+    <div className={styles.font_size_dropdown}>
+      <select
+        onChange={(e) => editor.chain().focus().setFontSize(e.target.value).run()}
+        value={editor.getAttributes('textStyle').fontSize || ''}
+      >
+        <option value="">기본</option>
+        {fontSizes.map((size) => (
+          <option key={size} value={size}>
+            {size}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
+
 const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor }) => {
   const [showTooltip, setShowTooltip] = useState<string | null>(null);
 
@@ -109,6 +129,16 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor }) => {
       </ToggleGroup>
       <div className={styles.separator} />
       {renderButtonGroup(blockButtons)}
+      <ToggleGroup>
+        <div
+          className={styles.font_size_wrapper}
+          onMouseEnter={() => setShowTooltip('폰트 크기')}
+          onMouseLeave={() => setShowTooltip(null)}
+        >
+          <FontSizeDropdown editor={editor} />
+          {showTooltip === '폰트 크기' && <span className={styles.tooltip}>폰트 크기</span>}
+        </div>
+      </ToggleGroup>
       <div className={styles.separator} />
       {renderButtonGroup(listButtons)}
       <div className={styles.separator} />

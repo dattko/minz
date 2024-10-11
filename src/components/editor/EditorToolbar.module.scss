@@ -92,3 +92,36 @@
   white-space: nowrap;
   z-index: 1000;
 }
+
+
+.font_size_dropdown {
+  select {
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    width: 100%;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    line-height: inherit;
+    outline: none;
+  }
+}
+
+.font_size_wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+  height: 26px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  transition: all 0.2s ease;
+  select{
+    font-size: 11px;
+  }
+  &:hover {
+    background-color: #e9e9e9;
+  }
+}

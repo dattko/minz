@@ -22,6 +22,7 @@ import Document from '@tiptap/extension-document'
 import Dropcursor from '@tiptap/extension-dropcursor'
 import TextStyle from '@tiptap/extension-text-style'
 import Color from '@tiptap/extension-color'
+import { FontSize } from './FontSizeExtension'
 
 const Tiptap = () => {
   const editor = useEditor({
@@ -45,6 +46,7 @@ const Tiptap = () => {
       Dropcursor,
       TextStyle,
       Color,
+      FontSize.configure(),
       TextAlign.configure({
         types: ['heading', 'paragraph'],
       }),
