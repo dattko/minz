@@ -13,7 +13,7 @@ export interface PostsProps {
   author: string;
   createdAt: string;
   views: number;
-  likes: number;
+  likes: number; 
 }
 
 // 가상 데이터
@@ -101,8 +101,8 @@ const PostsDetail: React.FC<PostsProps> = ({
             <Btn size='small' variant='outline-secondary'>삭제</Btn>
           </div>
           <div>
-            <Btn size='small' variant='primary'><Heart size={10}/> 좋아요</Btn>
-            <Btn size='small' variant='accent'><Ban size={10}/>신고</Btn>
+            <Btn size='small' variant='primary'><Heart size={12}/> 좋아요</Btn>
+            <Btn size='small' variant='accent'><Ban size={12}/>신고</Btn>
             <Btn size='small' variant='secondary'>목록</Btn>
           </div>
 

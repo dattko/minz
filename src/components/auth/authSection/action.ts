@@ -103,6 +103,6 @@ export async function signup(prevState: State, formData: FormData): Promise<Stat
 
   console.log('회원가입 성공');
   revalidatePath('/', 'layout');
-  return redirect('/'); // 회원가입에 성공 시 메인 페이지로 이동
+  return redirect('/');
 }
 

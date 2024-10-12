@@ -1,29 +1,21 @@
-'use client';
 import React, { useState } from 'react';
 import { InputWrap, Input } from '@/components/common/input';
 import Btn from '@/components/common/button/Btn';
+import Tiptap from '@/components/editor/Editor';
 import dynamic from 'next/dynamic';
 
-const Tiptap = dynamic(() => import('@/components/editor/Editor'), { ssr: false })
+// const Tiptap = dynamic(() => import('@/components/editor/Editor'), { ssr: false, loading: () => <p>Loading...</p> });
 
 const CreatePostForm = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
 
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log({ title, content });
-  };
 
   return (
-        <form onSubmit={handleSubmit}>
+        <form  >
           <InputWrap>
             <Input
               required
               placeholder="제목을 입력하세요"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              name='title'
             />
           </InputWrap>
             <Tiptap/>
