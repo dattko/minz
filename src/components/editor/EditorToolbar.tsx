@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styles from './EditorToolbar.module.scss';
 import { 
   Bold, Italic, Underline, Strikethrough, Pilcrow, Heading1, Heading2, 
@@ -8,6 +8,7 @@ import {
 
 interface EditorToolbarProps {
   editor: any;
+  onImageUpload: (file: File) => Promise<string>;
 }
 
 interface ToolbarButton {
@@ -56,8 +57,9 @@ const FontSizeDropdown: React.FC<{ editor: any }> = ({ editor }) => {
   );
 };
 
-const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor }) => {
+const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageUpload }) => {
   const [showTooltip, setShowTooltip] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   if (!editor) {
     return null;
@@ -71,11 +73,32 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor }) => {
   ];
 
   const blockButtons: ToolbarButton[] = [
-    { icon: Pilcrow, command: () => editor.chain().focus().setParagraph().run(), isActive: editor.isActive('paragraph'), label: '단락' },
-    { icon: Heading1, command: () => editor.chain().focus().toggleHeading({ level: 1 }).run(), isActive: editor.isActive('heading', { level: 1 }), label: '제목 1' },
-    { icon: Heading2, command: () => editor.chain().focus().toggleHeading({ level: 2 }).run(), isActive: editor.isActive('heading', { level: 2 }), label: '제목 2' },
+    { 
+      icon: Pilcrow, 
+      command: () => {
+        editor.chain().focus().setParagraph().setFontSize('inherit').run(); 
+      }, 
+      isActive: editor.isActive('paragraph'), 
+      label: '단락' 
+    },
+    { 
+      icon: Heading1, 
+      command: () => {
+        editor.chain().focus().toggleHeading({ level: 1 }).setFontSize('inherit').run(); 
+      }, 
+      isActive: editor.isActive('heading', { level: 1 }), 
+      label: '제목 1' 
+    },
+    { 
+      icon: Heading2, 
+      command: () => {
+        editor.chain().focus().toggleHeading({ level: 2 }).setFontSize('inherit').run(); 
+      }, 
+      isActive: editor.isActive('heading', { level: 2 }), 
+      label: '제목 2' 
+    },
   ];
-
+  
   const listButtons: ToolbarButton[] = [
     { icon: List, command: () => editor.chain().focus().toggleBulletList().run(), isActive: editor.isActive('bulletList'), label: '글머리 기호' },
     { icon: ListOrdered, command: () => editor.chain().focus().toggleOrderedList().run(), isActive: editor.isActive('orderedList'), label: '번호 매기기' },
@@ -104,6 +127,19 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor }) => {
       ))}
     </ToggleGroup>
   );
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      try {
+        const imageUrl = await onImageUpload(file);
+        editor.chain().focus().setImage({ src: imageUrl }).run();
+      } catch (error) {
+        console.error('Image upload failed:', error);
+        alert('이미지 업로드에 실패했습니다.');
+      }
+    }
+  };
 
   return (
     <div className={styles.toolbar}>
@@ -182,12 +218,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor }) => {
         </ToggleGroupItem>
         <ToggleGroupItem
           value="image"
-          onClick={() => {
-            const url = window.prompt('이미지 URL을 입력하세요:');
-            if (url) {
-              editor.chain().focus().setImage({ src: url }).run();
-            }
-          }}
+          onClick={() => fileInputRef.current?.click()}
           isActive={false}
           onMouseEnter={() => setShowTooltip('이미지')}
           onMouseLeave={() => setShowTooltip(null)}
@@ -195,6 +226,13 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor }) => {
           <Image />
           {showTooltip === '이미지' && <span className={styles.tooltip}>이미지</span>}
         </ToggleGroupItem>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleImageUpload}
+          accept="image/*"
+          style={{ display: 'none' }}
+        />
       </ToggleGroup>
       <div className={styles.separator} />
       <ToggleGroup>

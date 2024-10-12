@@ -22,6 +22,8 @@ import Document from '@tiptap/extension-document'
 import Dropcursor from '@tiptap/extension-dropcursor'
 import TextStyle from '@tiptap/extension-text-style'
 import Color from '@tiptap/extension-color'
+import CodeBlock from '@tiptap/extension-code-block'
+import History from '@tiptap/extension-history'
 import { FontSize } from './FontSizeExtension'
 
 const Tiptap = () => {
@@ -40,12 +42,14 @@ const Tiptap = () => {
       Link,
       Image,
       Blockquote,
+      History,
       HardBreak,
       Text,
       Underline,
       Dropcursor,
       TextStyle,
       Color,
+      CodeBlock,
       FontSize.configure(),
       TextAlign.configure({
         types: ['heading', 'paragraph'],
@@ -58,13 +62,31 @@ const Tiptap = () => {
         openOnClick: false,
       }),
     ],
-    content: '<p>Hello World! 🌎️</p>',
     immediatelyRender: false,
   })
 
+  const handleImageUpload = async (file: File): Promise<string> => {
+    // 여기에 실제 이미지 업로드 로직을 구현합니다.
+    // 예: FormData를 사용하여 서버에 파일 업로드
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const response = await fetch('/api/upload-image', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Image upload failed');
+    }
+
+    const { imageUrl } = await response.json();
+    return imageUrl;
+  };
+
   return (
     <div className={styles.editor}>
-      <EditorToolbar editor={editor} />
+      <EditorToolbar editor={editor} onImageUpload={handleImageUpload}/>
       <EditorContent editor={editor} className={styles.editor__content} />
     </div>
   )
