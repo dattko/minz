@@ -39,12 +39,17 @@ const ToggleGroupItem: React.FC<{ value: string; onClick: () => void; isActive: 
 
 const FontSizeDropdown: React.FC<{ editor: any }> = ({ editor }) => {
   const fontSizes = ['8px', '10px', '12px', '14px', '16px', '18px', '20px', '24px', '30px', '36px', '48px', '60px', '72px'];
-  
+
   return (
     <div className={styles.font_size_dropdown}>
       <select
-        onChange={(e) => editor.chain().focus().setFontSize(e.target.value).run()}
-        value={editor.getAttributes('textStyle').fontSize || ''}
+        onChange={(e) => {
+          const size = e.target.value;
+          editor.chain().focus().setNode('paragraph', {
+            style: `font-size: ${size}`,
+          }).run();
+        }}
+        value={editor.getAttributes('paragraph').style?.fontSize || ''}
       >
         <option value="">기본</option>
         {fontSizes.map((size) => (
@@ -56,6 +61,7 @@ const FontSizeDropdown: React.FC<{ editor: any }> = ({ editor }) => {
     </div>
   );
 };
+
 
 const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageUpload }) => {
   const [showTooltip, setShowTooltip] = useState<string | null>(null);
@@ -76,7 +82,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageUpload }) 
     { 
       icon: Pilcrow, 
       command: () => {
-        editor.chain().focus().setParagraph().setFontSize('inherit').run(); 
+        editor.chain().focus().setParagraph().run(); 
       }, 
       isActive: editor.isActive('paragraph'), 
       label: '단락' 
@@ -84,7 +90,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageUpload }) 
     { 
       icon: Heading1, 
       command: () => {
-        editor.chain().focus().toggleHeading({ level: 1 }).setFontSize('inherit').run(); 
+        editor.chain().focus().toggleHeading({ level: 1 }).run(); 
       }, 
       isActive: editor.isActive('heading', { level: 1 }), 
       label: '제목 1' 
@@ -92,7 +98,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageUpload }) 
     { 
       icon: Heading2, 
       command: () => {
-        editor.chain().focus().toggleHeading({ level: 2 }).setFontSize('inherit').run(); 
+        editor.chain().focus().toggleHeading({ level: 2 }).run(); 
       }, 
       isActive: editor.isActive('heading', { level: 2 }), 
       label: '제목 2' 

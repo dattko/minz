@@ -1,88 +1,71 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
-import Underline from '@tiptap/extension-underline'
-import TextAlign from '@tiptap/extension-text-align'
-import Image from '@tiptap/extension-image'
-import Link from '@tiptap/extension-link'
 import styles from './Editor.module.scss'
 import EditorToolbar from './EditorToolbar'
-import Blockquote from '@tiptap/extension-blockquote'
-import Paragraph from '@tiptap/extension-paragraph'
-import Text from '@tiptap/extension-text'
-import Bold from '@tiptap/extension-bold'
-import Italic from '@tiptap/extension-italic'
-import Strike from '@tiptap/extension-strike'
-import Heading from '@tiptap/extension-heading'
-import BulletList from '@tiptap/extension-bullet-list'
-import ListItem from '@tiptap/extension-list-item'
-import HardBreak from '@tiptap/extension-hard-break'
-import OrderedList from '@tiptap/extension-ordered-list'
-import Document from '@tiptap/extension-document'
-import Dropcursor from '@tiptap/extension-dropcursor'
-import TextStyle from '@tiptap/extension-text-style'
-import Color from '@tiptap/extension-color'
-import CodeBlock from '@tiptap/extension-code-block'
-import History from '@tiptap/extension-history'
-import { FontSize } from './FontSizeExtension'
+import { uploadImage } from '@/lib/action/imageAction'
+import { useImageCleanup } from '@/hooks/editor/useImageCleanup'
+import { editorExtensions } from './editorExtensions'
 
 const Tiptap = () => {
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const { cleanupImages, cleanupUnusedImages } = useImageCleanup(uploadedImages, setUploadedImages);
+
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
+
+  const handleImageUpload = useCallback(async (file: File): Promise<string> => {
+    try {
+      const base64 = await fileToBase64(file);
+      const fileData = { name: file.name, type: file.type, size: file.size, base64 };
+      const imageUrl = await uploadImage(fileData);
+      setUploadedImages(prev => [...prev, imageUrl]);
+      return imageUrl;
+    } catch (error) {
+      console.error('Error uploading image: ', error);
+      alert(error instanceof Error ? error.message : '이미지 업로드 중 오류가 발생했습니다.');
+      throw error;
+    }
+  }, []);
+
   const editor = useEditor({
-    extensions: [
-      Document,
-      Paragraph,
-      Text,
-      Bold,
-      Italic,
-      Strike,
-      Heading,
-      BulletList,
-      ListItem,
-      OrderedList,
-      Link,
-      Image,
-      Blockquote,
-      History,
-      HardBreak,
-      Text,
-      Underline,
-      Dropcursor,
-      TextStyle,
-      Color,
-      CodeBlock,
-      FontSize.configure(),
-      TextAlign.configure({
-        types: ['heading', 'paragraph'],
-      }),
-      Image.configure({
-        inline: true,
-        allowBase64: true,
-      }),
-      Link.configure({
-        openOnClick: false,
-      }),
-    ],
+    extensions: editorExtensions,
     immediatelyRender: false,
+    onUpdate: ({ editor }) => {
+      const content = editor.getJSON();
+      const usedImages = new Set<string>();
+      JSON.stringify(content, (_, value) => {
+        if (typeof value === 'object' && value !== null && 'src' in value) {
+          usedImages.add(value.src as string);
+        }
+        return value;
+      });
+      cleanupUnusedImages(Array.from(usedImages));
+    },
   })
 
-  const handleImageUpload = async (file: File): Promise<string> => {
-    // 여기에 실제 이미지 업로드 로직을 구현합니다.
-    // 예: FormData를 사용하여 서버에 파일 업로드
-    const formData = new FormData();
-    formData.append('image', file);
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (uploadedImages.length > 0) {
+        e.preventDefault();
+      }
+    };
 
-    const response = await fetch('/api/upload-image', {
-      method: 'POST',
-      body: formData,
-    });
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [uploadedImages]);
 
-    if (!response.ok) {
-      throw new Error('Image upload failed');
-    }
-
-    const { imageUrl } = await response.json();
-    return imageUrl;
-  };
+  useEffect(() => {
+    return () => {
+      if (uploadedImages.length > 0) cleanupImages();
+    };
+  }, [cleanupImages, uploadedImages]);
 
   return (
     <div className={styles.editor}>

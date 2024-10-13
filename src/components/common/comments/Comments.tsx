@@ -3,11 +3,11 @@ import { User, MessageSquare, Trash, Pencil, CornerDownRight } from 'lucide-reac
 import Text from '@/components/text/Text';
 import styles from './Comments.module.scss';
 import Btn from '../button/Btn';
-import { comment } from '@/types/dataType';
+import { Comment } from '@/types/dataType';
 
 interface CommentsProps {
   postId: number;
-  initialComments: comment[];
+  initialComments: Comment[];
 }
 
 const Comments: React.FC<CommentsProps> = ({ postId, initialComments }) => {

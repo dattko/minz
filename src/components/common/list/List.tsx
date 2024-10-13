@@ -3,18 +3,12 @@ import Link from 'next/link';
 import styles from './List.module.scss';
 import Text from '@/components/text/Text';
 import { Eye } from 'lucide-react';
+import { Post } from '@/types/dataType';
 
-export interface ListItem {
-  id: string | number;
-  title: string;
-  date: string;
-  views?: number;
-  link: string;
-  comments?: number;
-}
+
 
 interface ListProps {
-  items: ListItem[];
+  items: Post[];
   showViews?: boolean;
   
 }
@@ -29,7 +23,7 @@ const List: React.FC<ListProps> = ({ items, showViews = false }) => {
               <Text variant='p' ellipsis>{item.title}</Text>
             </Link>
             {item.comments !== undefined && (
-              <Text variant='p' color='orange' fontSize='xs'>{item.comments}</Text>
+              <Text variant='p' color='orange' fontSize='xs'>{item.comments.length}</Text>
             )}
           </div>
           <div className={styles.list__date}>

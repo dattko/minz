@@ -6,3 +6,27 @@
     outline: none;
   }
 }
+
+
+
+
+.resizable-image {
+  position: relative;
+  display: inline-block;
+  max-width: 80%;
+  img {
+    display: block;
+  }
+
+  .resize-handle {
+    position: absolute;
+    right: -6px;
+    bottom: -6px;
+    width: 12px;
+    height: 12px;
+    background-color: #1976d2;
+    border: 2px solid white;
+    border-radius: 50%;
+    cursor: se-resize;
+  }
+}
