@@ -1,7 +1,7 @@
 import React from 'react';
 import PostDetail from '@/components/common/posts/PostsDetail';
 
-const noticePage = () => {
+const ListsPage = () => {
   // 임시 데이터
   const post = {
     id: '1',
@@ -31,12 +31,12 @@ const noticePage = () => {
         title={post.title}
         content={post.content}
         author={post.author}
-        createdAt={post.created_at}
+        created_at={post.created_at}
         views={post.views}
-        likes={post.likes}
+        recommendations={post.likes}
       />
     </div>
   );
 }
 
-export default noticePage;
+export default ListsPage;

@@ -27,24 +27,29 @@ export function formatDate(dateString: string, options: DateFormatOptions = {}):
     formatOptions.timeStyle = timeStyle;
   }
 
-  // 날짜만 표시하거나 시간만 표시할 경우
-  if (!showDate || !showTime) {
-    delete formatOptions.dateStyle;
-    delete formatOptions.timeStyle;
+  // // 날짜만 표시하거나 시간만 표시할 경우
+  // if (!showDate || !showTime) {
+  //   delete formatOptions.dateStyle;
+  //   delete formatOptions.timeStyle;
 
-    if (showDate) {
-      formatOptions.year = 'numeric';
-      formatOptions.month = 'long';
-      formatOptions.day = 'numeric';
-    }
+  //   if (showDate) {
+  //     formatOptions.year = 'numeric';
+  //     formatOptions.month = 'long';
+  //     formatOptions.day = 'numeric';
+  //   }
 
-    if (showTime) {
-      formatOptions.hour = '2-digit';
-      formatOptions.minute = '2-digit';
-    }
-  }
+  //   if (showTime) {
+  //     formatOptions.hour = '2-digit';
+  //     formatOptions.minute = '2-digit';
+  //   }
+  // }
 
-  return date.toLocaleString('ko-KR', formatOptions);
+  let formattedDate = date.toLocaleString('ko-KR', formatOptions);
+  // 마지막에 오는 점을 제거
+  formattedDate = formattedDate.replace(/\.$/, '');
+
+  return formattedDate;
+
 }
 
 // 모든 이벤트 타입을 포함하는 유니온 타입

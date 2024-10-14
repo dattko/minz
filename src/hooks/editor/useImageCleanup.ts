@@ -1,24 +1,29 @@
 import { useCallback, useRef } from 'react'
-import { deleteImage } from '@/lib/action/imageAction'
+import { createClient } from '@/lib/supabase/supabaseClient'
 
 export const useImageCleanup = (uploadedImages: string[], setUploadedImages: React.Dispatch<React.SetStateAction<string[]>>) => {
   const isCleaningUp = useRef(false);
+  const supabase = createClient();
 
   const cleanupImages = useCallback(async () => {
     if (isCleaningUp.current) return;
     isCleaningUp.current = true;
     
     for (const imageUrl of uploadedImages) {
-      try {
-        await deleteImage(imageUrl);
-      } catch (error) {
-        console.error('Error deleting image:', error);
+      const path = imageUrl.split('/').pop();
+      if (path) {
+        const { error } = await supabase.storage
+          .from('posts')
+          .remove([path]);
+        if (error) {
+          console.error('Error deleting image:', error);
+        }
       }
     }
     
     setUploadedImages([]);
     isCleaningUp.current = false;
-  }, [uploadedImages, setUploadedImages]);
+  }, [uploadedImages, setUploadedImages, supabase]);
 
   const cleanupUnusedImages = useCallback(async (usedImages: string[]) => {
     if (isCleaningUp.current) return;
@@ -26,17 +31,24 @@ export const useImageCleanup = (uploadedImages: string[], setUploadedImages: Rea
 
     const unusedImages = uploadedImages.filter(url => !usedImages.includes(url));
     
-    for (const imageUrl of unusedImages) {
-      try {
-        await deleteImage(imageUrl);
-      } catch (error) {
-        console.error('Error deleting unused image:', error);
+    if (unusedImages.length > 0) {
+      for (const imageUrl of unusedImages) {
+        const path = imageUrl.split('/').pop();
+        if (path) {
+          const { error } = await supabase.storage
+            .from('posts')
+            .remove([path]);
+          if (error) {
+            console.error('Error deleting unused image:', error);
+          }
+        }
       }
+      
+      setUploadedImages(prev => prev.filter(url => usedImages.includes(url)));
     }
-    
-    setUploadedImages(usedImages);
+
     isCleaningUp.current = false;
-  }, [uploadedImages, setUploadedImages]);
+  }, [uploadedImages, setUploadedImages, supabase]);
 
   return { cleanupImages, cleanupUnusedImages };
 }

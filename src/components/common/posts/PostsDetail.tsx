@@ -4,20 +4,12 @@ import { User, Eye, Heart, Ban } from 'lucide-react';
 import { formatDate } from '@/utils/utils';
 import Text from '@/components/text/Text';
 import Comments from '../comments/Comments';
-import { comment } from '@/types/dataType';
+import { Comment, Posts } from '@/types/dataType';
 import Btn from '../button/Btn';
 
-export interface PostsProps {
-  title: string;
-  content: string;
-  author: string;
-  createdAt: string;
-  views: number;
-  likes: number; 
-}
 
 // 가상 데이터
-const initialComments: comment[] = [
+const initialComments: Comment[] = [
   {
     author: '관리자',
     date: '2021-07-01 12:00',
@@ -55,19 +47,23 @@ const initialComments: comment[] = [
   },
 ];
 
-const PostsDetail: React.FC<PostsProps> = ({
+const PostsDetail: React.FC<Posts> = ({
   title,
   content,
   author,
-  createdAt,
+  created_at,
   views,
-  likes
+  recommendations,
+  category
 }) => {
   return (
     <article className={styles.posts__detail}>
+      <div className={styles.posts__category}>
+        <Text variant='h2' fontSize='sm' color='blue'>{category}</Text>
+      </div>
       <header className={styles.posts__header}>
         <div className={styles.posts__title__wrap}>
-          <div  className={styles.posts__title}>
+          <div className={styles.posts__title}>
             <Text variant='h4'>{title}</Text>
           </div>
           <div className={styles.posts__stats}>
@@ -77,7 +73,7 @@ const PostsDetail: React.FC<PostsProps> = ({
             </div>
             <div className={styles.posts__stat}>
               <Heart size={14} />
-              <Text variant='p' fontSize='sm'>{likes}</Text>
+              <Text variant='p' fontSize='sm'>{recommendations}</Text>
             </div>
           </div>
         </div>
@@ -87,7 +83,7 @@ const PostsDetail: React.FC<PostsProps> = ({
             <Text variant='p' fontSize='sm'>{author}</Text>
           </div>
           <div className={styles.posts__date}>
-            <Text variant='p' fontSize='sm' color='gray'>{formatDate(createdAt)}</Text>
+            <Text variant='p' fontSize='sm' color='gray'>{formatDate(created_at)}</Text>
           </div>
         </div>
       </header>
@@ -96,18 +92,17 @@ const PostsDetail: React.FC<PostsProps> = ({
         dangerouslySetInnerHTML={{ __html: content }}
       />
       <div className={styles.posts__option}>
-          <div>
-            <Btn size='small' variant='outline-secondary'>수정</Btn>
-            <Btn size='small' variant='outline-secondary'>삭제</Btn>
-          </div>
-          <div>
-            <Btn size='small' variant='primary'><Heart size={12}/> 좋아요</Btn>
-            <Btn size='small' variant='accent'><Ban size={12}/>신고</Btn>
-            <Btn size='small' variant='secondary'>목록</Btn>
-          </div>
-
+        <div>
+          <Btn size='small' variant='outline-secondary'>수정</Btn>
+          <Btn size='small' variant='outline-secondary'>삭제</Btn>
+        </div>
+        <div>
+          <Btn size='small' variant='primary'><Heart size={12}/> 좋아요</Btn>
+          {/* <Btn size='small' variant='accent'><Ban size={12}/>신고</Btn> */}
+          <Btn size='small' variant='secondary'>목록</Btn>
+        </div>
       </div>
-      <footer className={styles.posts__ooter}>
+      <footer className={styles.posts__footer}>
         <Comments postId={1} initialComments={initialComments} />
       </footer>
     </article>

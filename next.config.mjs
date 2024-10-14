@@ -11,6 +11,11 @@ const nextConfig = {
   },
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
   reactStrictMode: true,
+  experimental: {
+     serverActions: {
+      bodySizeLimit: '20mb',
+     }
+  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,

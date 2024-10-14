@@ -23,7 +23,7 @@ export async function uploadImage(fileData: { name: string; type: string; size: 
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('User not authenticated')
+    throw new Error('로그인이 필요합니다.');
   }
 
   const fileExt = fileData.name.split('.').pop()
