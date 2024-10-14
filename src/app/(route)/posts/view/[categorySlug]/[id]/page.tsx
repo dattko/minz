@@ -1,17 +1,23 @@
 import React from 'react';
 import PostDetail from '@/components/common/posts/PostsDetail';
 import { fetchSupabaseData } from '@/lib/supabase/api';
-import { redirect } from 'next/navigation';
+import { redirect, notFound } from 'next/navigation';
 
 interface PostPageProps {
-  params: { id: string };
+  params: { categorySlug: string; id: string };
 }
 
-async function getPostDetail(id: string) {
-  const query = `posts?select=*,categories(name)&id=eq.${id}`;
+async function getPostDetail(categorySlug: string, id: string) {
+  const query = `posts?select=*,categories!inner(name,slug)&id=eq.${id}`;
   try {
     const data = await fetchSupabaseData(query);
-    return data[0]; // Assuming the query returns an array with one post
+    const post = data[0];
+    
+    if (post && post.categories.slug === categorySlug) {
+      return post;
+    } else {
+      return null;
+    }
   } catch (error) {
     console.error('Error fetching post detail:', error);
     return null;
@@ -19,14 +25,13 @@ async function getPostDetail(id: string) {
 }
 
 const PostPage: React.FC<PostPageProps> = async ({ params }) => {
-  const post = await getPostDetail(params.id);
+  const post = await getPostDetail(params.categorySlug, params.id);
 
   if (!post) {
-    return redirect('/');
+    notFound(); 
   }
 
   return (
-    <div>
       <PostDetail
         title={post.title}
         content={post.content}
@@ -35,8 +40,8 @@ const PostPage: React.FC<PostPageProps> = async ({ params }) => {
         views={post.views}
         recommendations={post.recommendations}
         category={post.categories.name}
+        categorySlug={post.categories.slug}
       />
-    </div>
   );
 }
 

@@ -16,20 +16,23 @@ interface ListProps {
 async function getPostsByCategory(categorySlug: string, limit: number): Promise<ListItem[]> {
   let query = `posts?select=id,title,created_at,views,comment_count,categories!inner(slug,name)`;
 
-  if (categorySlug === 'recent') {
-    query = `posts?select=id,title,created_at,views,comment_count,categories(slug,name)&order=created_at.desc&limit=${limit}`;
-  } else if (categorySlug === 'best') {
-    query = `posts?select=id,title,created_at,views,comment_count,categories(slug,name)&order=views.desc&limit=${limit}`;
-  } else {
-    query += `&categories.slug=eq.${categorySlug}&order=created_at.desc&limit=${limit}`;
+  switch(categorySlug) {
+    case 'recent':
+      query = `posts?select=id,title,created_at,views,comment_count,categories(slug,name)&order=created_at.desc&limit=${limit}`;
+      break;
+    case 'best':
+      query = `posts?select=id,title,created_at,views,comment_count,categories(slug,name)&order=views.desc&limit=${limit}`;
+      break;
+    default:
+      query += `&categories.slug=eq.${categorySlug}&order=created_at.desc&limit=${limit}`;
   }
 
   try {
     const data = await fetchSupabaseData(query);
     return data.map((post: any) => ({
       ...post,
-      categoryName: post.categories ? post.categories.name : null,
-      categorySlug: post.categories ? post.categories.slug : null
+      categoryName: post.categories?.name,
+      categorySlug: post.categories?.slug
     }));
   } catch (error) {
     console.error('Error fetching posts:', error);
@@ -45,10 +48,10 @@ const List: React.FC<ListProps> = async ({ categorySlug, showViews = false, limi
       {posts.map((post) => (
         <li key={post.id} className={styles.list__li}>
           <div className={styles.list__title}>
-          {(categorySlug === 'recent' || categorySlug === 'best') && post.categoryName && (
+            {(categorySlug === 'recent' || categorySlug === 'best') && post.categoryName && (
               <Text variant='p' color='gray' fontSize='xs'>[{post.categoryName}]</Text>
             )}
-            <Link href={`/posts/view/${post.id}`}>
+            <Link href={`/posts/view/${post.categorySlug}/${post.id}`}>
               <Text variant='p' ellipsis>{post.title}</Text>
             </Link>
             <Text variant='p' color='orange' fontSize='xs'>{post.comment_count}</Text>

@@ -6,7 +6,7 @@ import Text from '@/components/text/Text';
 import Comments from '../comments/Comments';
 import { Comment, Posts } from '@/types/dataType';
 import Btn from '../button/Btn';
-
+import Link from 'next/link';
 
 // 가상 데이터
 const initialComments: Comment[] = [
@@ -54,7 +54,8 @@ const PostsDetail: React.FC<Posts> = ({
   created_at,
   views,
   recommendations,
-  category
+  category,
+  categorySlug,
 }) => {
   return (
     <article className={styles.posts__detail}>
@@ -99,7 +100,9 @@ const PostsDetail: React.FC<Posts> = ({
         <div>
           <Btn size='small' variant='primary'><Heart size={12}/> 좋아요</Btn>
           {/* <Btn size='small' variant='accent'><Ban size={12}/>신고</Btn> */}
-          <Btn size='small' variant='secondary'>목록</Btn>
+          <Link href={`/posts/lists/${categorySlug}`}>
+            <Btn size='small' variant='secondary'>목록</Btn>
+          </Link>
         </div>
       </div>
       <footer className={styles.posts__footer}>
