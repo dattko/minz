@@ -8,19 +8,21 @@ import styles from './CategoryPage.module.scss';
 import Link from 'next/link';
 
 interface CategoryPageProps {
-  params: { category: string };
+  params: { slug: string };
 }
 
 interface CategoryDetails {
-  id: number;
   name: string;
-  slug: string;
   description?: string;
 }
 
 async function getCategoryDetails(slug: string): Promise<CategoryDetails | null> {
+  if (slug === 'popular') {
+    return { name: '오늘의 베스트' };
+  }
+
   try {
-    const response = await fetch(`${supabaseUrl}/rest/v1/categories?slug=eq.${slug}&select=*`, {
+    const response = await fetch(`${supabaseUrl}/rest/v1/categories?slug=eq.${slug}&select=name,description`, {
       headers: {
         'apikey': supabaseKey,
         'Authorization': `Bearer ${supabaseKey}`,
@@ -35,29 +37,20 @@ async function getCategoryDetails(slug: string): Promise<CategoryDetails | null>
 }
 
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
-  let category: CategoryDetails | null = null;
-  let title: string = '';
-  let slug: string = params.category;
-  
-  if (params.category === 'popular') {
-    title = '오늘의 베스트';
-  } else {
-    category = await getCategoryDetails(params.category);
-    if (!category) {
-      notFound();
-    }
-    title = category.name;
-    slug = category.slug;
+  const category = await getCategoryDetails(params.slug);
+
+  if (!category) {
+    notFound();
   }
 
   return (
     <ContentWrap>
-      <Content title={title} className={slug}>
-        <List categorySlug={slug} showViews={params.category === 'popular'} />
+      <Content title={category.name} className={params.slug}>
+        <List categorySlug={params.slug} showViews={params.slug === 'popular'} />
         <div className={styles.lists__option}>
           <div className={styles.lists__pagenation}></div>
-          {params.category !== 'popular' && (
-            <Link href={`/posts/write?category=${slug}`}>
+          {params.slug !== 'popular' && (
+            <Link href={`/posts/write?category=${params.slug}`}>
               <Btn>작성하기</Btn>
             </Link>
           )}
