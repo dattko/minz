@@ -58,6 +58,6 @@ export async function createPosts(postData: CreatePosts) {
     console.error('Error creating post:', error)
     return { errorMsg: (error as Error).message }
   }
-  revalidatePath('/')
+  revalidatePath('/posts')
   redirect(`/posts/lists/${category_slug}`)
 }

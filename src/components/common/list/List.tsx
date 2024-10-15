@@ -91,8 +91,10 @@ const List: React.FC<ListProps> = async ({ categorySlug, showViews = false, limi
     </ul>
   );
 };
+//isr 활용
+export const revalidate = 60;
 
 // 강제로 동적 렌더링을 활성화
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 export default List;
