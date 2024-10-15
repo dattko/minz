@@ -2,16 +2,21 @@ import React from 'react';
 import LoginForm from '@/components/auth/loginForm/LoginForm';
 import { Content, ContentWrap } from '@/components/common/content';
 import Text from '@/components/text/Text';
+import styles from './Login.module.scss';
 const Login = () => {
   return (
-    <ContentWrap>
-      <Content title="로그인"  maxWidth='420px'>
-        <LoginForm />
-        <div style={{marginTop: 12}}>
-          <Text variant='p' color='red' fontSize='sm'>로그인 해야 이용 가능 합니다.</Text>
-        </div>
-      </Content>
-    </ContentWrap>
+    <div className={styles.login}>
+      <div className={styles.login__wrap}>
+        <ContentWrap>
+          <Content title="로그인"  maxWidth='420px'>
+            <LoginForm />
+          </Content>
+        </ContentWrap>
+      </div>
+      <div className={styles.login__text}>
+        <Text variant='p' color='red' fontSize='sm'>로그인 해야 이용 가능 합니다.</Text>
+      </div>
+    </div>
   );
 }
 

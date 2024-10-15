@@ -11,7 +11,7 @@ const initialState = {
   errorMsg: {},
 };
 
-export default function SignUpForm() {
+const SignUpForm = ()=> {
   const [state, formAction] = useFormState(signup, initialState);
 
   return (
@@ -57,3 +57,5 @@ export default function SignUpForm() {
     </ContentWrap>
   );
 }
+
+export default SignUpForm;
