@@ -38,6 +38,7 @@ const PostPage: React.FC<PostPageProps> = async ({ params }) => {
 
   return (
     <PostDetail
+      id={post.id}
       title={post.title}
       content={post.content}
       author={post.author}

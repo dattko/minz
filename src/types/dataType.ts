@@ -10,11 +10,12 @@ export interface User {
   created_at: string
   updated_at: string
   point: number
+  usertype: string;
 }
 
 //포스트타입
 export interface Posts {
-  id?: string | number;
+  id: number;
   title: string;
   content: string; // 포스트 내용
   author: string; // 작성자
@@ -28,7 +29,7 @@ export interface Posts {
   category?: string; // 포스트 카테고리
   status?: 'draft' | 'published' | 'archived'; // 포스트 상태
   featured_image?: string; // 대표 이미지 URL
-  categorySlug?: string;
+  categorySlug: string;
   localImages?: {
     id: string;
     url: string;

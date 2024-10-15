@@ -6,6 +6,7 @@ import { supabaseUrl, supabaseKey } from '@/lib/supabase/supabase';
 import Btn from '@/components/common/button/Btn';
 import styles from './CategoryPage.module.scss';
 import Link from 'next/link';
+import { getUserInfo } from '@/components/auth/authSection/action';
 
 interface CategoryPageProps {
   params: { slug: string };
@@ -37,11 +38,21 @@ async function getCategoryDetails(slug: string): Promise<CategoryDetails | null>
 }
 
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
-  const category = await getCategoryDetails(params.slug);
+  const [category, user] = await Promise.all([
+    getCategoryDetails(params.slug),
+    getUserInfo()
+  ]);
 
   if (!category) {
     notFound();
   }
+
+  const isAdmin = user?.usertype === 'Admin';
+  const isNoticeCategory = params.slug === 'notice'; 
+
+  const showWriteButton = params.slug !== 'popular' && (
+    !isNoticeCategory || (isNoticeCategory && isAdmin)
+  );
 
   return (
     <ContentWrap>
@@ -49,7 +60,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
         <List categorySlug={params.slug} showViews={params.slug === 'popular'} />
         <div className={styles.lists__option}>
           <div className={styles.lists__pagenation}></div>
-          {params.slug !== 'popular' && (
+          {showWriteButton && (
             <Link href={`/posts/write?category=${params.slug}`}>
               <Btn>작성하기</Btn>
             </Link>

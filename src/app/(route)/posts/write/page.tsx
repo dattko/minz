@@ -14,7 +14,7 @@ const CreatePost = async ({ searchParams }: CreatePostProps) => {
   const categorySlug = searchParams.category;
 
   if (!user) {
-    redirect(`/posts/lists/${categorySlug}?loginRequired=true`);
+    redirect('/auth/login');
   }
 
   let title = '';

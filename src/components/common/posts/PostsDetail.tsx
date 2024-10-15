@@ -8,6 +8,8 @@ import { Comment, Posts } from '@/types/dataType';
 import Btn from '../button/Btn';
 import Link from 'next/link';
 import { getUserInfo } from '@/components/auth/authSection/action';
+import PostsDeleteBtn from './PostDeleteBtn';
+
 
 // 가상 데이터
 const initialComments: Comment[] = [
@@ -49,6 +51,7 @@ const initialComments: Comment[] = [
 ];
 
 const PostsDetail: React.FC<Posts> = async({
+  id,
   title,
   content,
   author,
@@ -60,7 +63,7 @@ const PostsDetail: React.FC<Posts> = async({
 }) => {
 
   const user = await getUserInfo();
-  console.log()
+
 
   return (
     <article className={styles.posts__detail}>
@@ -101,8 +104,8 @@ const PostsDetail: React.FC<Posts> = async({
           <div>
             {user?.nickname === author && (
               <>
-                <Btn size='small' variant='outline-secondary'>수정</Btn>
-                <Btn size='small' variant='outline-secondary'>삭제</Btn>
+                <Btn size='small' variant='outline-secondary' >수정</Btn>
+                <PostsDeleteBtn id={id} categorySlug={categorySlug}/>
               </>
             )}
           </div>
@@ -112,6 +115,7 @@ const PostsDetail: React.FC<Posts> = async({
           <Link href={`/posts/lists/${categorySlug}`}>
             <Btn size='small' variant='secondary'>목록</Btn>
           </Link>
+
         </div>
       </div>
       <footer className={styles.posts__footer}>
