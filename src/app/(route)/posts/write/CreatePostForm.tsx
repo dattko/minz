@@ -1,15 +1,19 @@
 'use client';
 import React, { useRef, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import { InputWrap, Input } from '@/components/common/input';
 import Btn from '@/components/common/button/Btn';
 import Tiptap from '@/components/editor/Editor';
 import { createPosts } from '@/lib/action/postsAction';
 import { CreatePosts } from '@/types/dataType';
 
+interface CreatePostFormProps {
+  categorySlug: string;
+}
 
-
-const CreatePostForm = () => {
+const CreatePostForm: React.FC<CreatePostFormProps> = ({ categorySlug }) => {
   const editorRef = useRef<{ getHTML: () => string; getLocalImages: () => any[] }>(null);
+  const router = useRouter();
 
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -37,10 +41,20 @@ const CreatePostForm = () => {
       title: titleInput.value,
       content: editorRef.current?.getHTML() || '',
       localImages: serializableLocalImages,
-      post_type: 'notice', 
+      category_slug: categorySlug, // 직접 slug 사용
     };
 
-    await createPosts(postData);
+    try {
+      await createPosts(postData);
+      // 서버 측에서 리다이렉트를 처리할 것입니다.
+    } catch (error) {
+      console.error('작성 에러 :', error);
+      // 에러 처리 (예: 사용자에게 에러 메시지 표시)
+    }
+  };
+
+  const handleCancel = () => {
+    router.back();
   };
 
   return (
@@ -55,7 +69,7 @@ const CreatePostForm = () => {
       <Tiptap ref={editorRef} />
       <div className='btn-row'>
         <Btn type="submit" variant='outline-primary'>게시글 작성</Btn>
-        <Btn type="button" variant='outline-secondary'>취소</Btn>
+        <Btn type="button" variant='outline-secondary' onClick={handleCancel}>취소</Btn>
       </div>
     </form>
   );

@@ -15,7 +15,7 @@ interface ListProps {
 }
 
 async function getPostsByCategory(categorySlug: string, limit: number): Promise<ListItem[]> {
-  let query = `posts?select=*,categories!inner(*)`;
+  let query = `posts?select=*,category_slug`;
 
   switch(categorySlug) {
     case 'recent':
@@ -26,17 +26,21 @@ async function getPostsByCategory(categorySlug: string, limit: number): Promise<
       query += `&created_at=gte.${oneWeekAgo}&order=views.desc,created_at.desc`;
       break;
     default:
-      query += `&categories.slug=eq.${categorySlug}&order=created_at.desc`;
+      query += `&category_slug=eq.${categorySlug}&order=created_at.desc`;
   }
 
   query += `&limit=${limit}`;
 
   try {
     const data = await fetchSupabaseData(query);
+    // 카테고리 이름을 가져오기 위한 추가 쿼리
+    const categoryNames = await fetchSupabaseData(`categories?select=slug,name`);
+    const categoryMap = new Map(categoryNames.map((cat: any) => [cat.slug, cat.name]));
+
     return data.map((post: any) => ({
       ...post,
-      categoryName: post.categories?.name,
-      categorySlug: post.categories?.slug
+      categoryName: categoryMap.get(post.category_slug),
+      categorySlug: post.category_slug
     }));
   } catch (error) {
     console.error('Error fetching posts:', error);
@@ -60,11 +64,11 @@ const List: React.FC<ListProps> = async ({ categorySlug, showViews = false, limi
             </Link>
             <Text variant='p' color='orange' fontSize='xs'>{post.comment_count}</Text>
           </div>
-            {!simple && (
-              <div className={styles.list__author}>
-                  <Text variant='p' fontSize='xs'>{post.author}</Text>
-              </div>
-            )}
+          {!simple && (
+            <div className={styles.list__author}>
+              <Text variant='p' fontSize='xs'>{post.author}</Text>
+            </div>
+          )}
           {(showViews || !simple) && (
             <div className={styles.list__views}>
               <Eye size={12} color='gray'/>

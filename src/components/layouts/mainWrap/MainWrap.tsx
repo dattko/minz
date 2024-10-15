@@ -32,7 +32,9 @@ const MainWrap: React.FC<MainWrapProps> = ({ children }) => {
             <div className={styles.main__login}>
               <AuthSection />
             </div>
-            <div className={styles.main__best}>asd</div>
+            {/* <div className={styles.main__best}>
+
+            </div> */}
           </div>
         </div>
       </div>

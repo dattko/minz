@@ -1,19 +1,19 @@
-// postsAction.ts
 'use server'
 import { createClient } from '@/lib/supabase/supabaseServer'
 import { v4 as uuidv4 } from 'uuid'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { CreatePosts } from '@/types/dataType'
+import { getUserInfo } from '@/components/auth/authSection/action'
 
 export async function createPosts(postData: CreatePosts) {
   const supabase = createClient()
-  const { title, content, localImages, post_type } = postData;
+  const { title, content, localImages, category_slug } = postData;
 
   try {
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
+    const user = await getUserInfo()
     
-    if (userError || !user) {
+    if (!user) {
       throw new Error('사용자 인증에 실패했습니다.')
     }
 
@@ -46,17 +46,18 @@ export async function createPosts(postData: CreatePosts) {
       .insert({ 
         title,
         content: finalContent,
-        author: user.id,
-        post_type,
-        status: 'draft'  // 기본값으로 'draft' 설정
+        author: user.nickname,
+        category_slug, 
+        status: 'published'
       })
 
     if (error) throw error
+
 
   } catch (error) {
     console.error('Error creating post:', error)
     return { errorMsg: (error as Error).message }
   }
   revalidatePath('/posts')
-  redirect('/')
+  redirect(`/posts/lists/${category_slug}`)
 }

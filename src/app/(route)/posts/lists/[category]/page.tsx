@@ -57,7 +57,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
         <div className={styles.lists__option}>
           <div className={styles.lists__pagenation}></div>
           {params.category !== 'popular' && (
-            <Link href="/posts/write">
+            <Link href={`/posts/write?category=${slug}`}>
               <Btn>작성하기</Btn>
             </Link>
           )}

@@ -6,8 +6,6 @@ import styles from './LoginForm.module.scss';
 import { login } from '../authSection/action';
 import { createClient } from '@/lib/supabase/supabaseClient';
 import { useRouter } from 'next/navigation';
-import Text from '@/components/text/Text';
-import Link from 'next/link';
 
 const LoginForm = () => {
   const router = useRouter();

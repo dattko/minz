@@ -46,7 +46,7 @@ export interface CreatePosts {
     base64: string;
     type: string;
   }[];
-  post_type: string;
+  category_slug: string;
 }
 
 export interface Comment {
