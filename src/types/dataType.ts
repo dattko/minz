@@ -67,13 +67,30 @@ export interface Comment {
 
 //리스트
 export interface ListItem {
-  id: string;
+  id: number | string;
   title: string;
   created_at: string;
   views: number;
-  categories: { slug: string };
   comment_count: number;
-  categoryName?: string;
-  categorySlug?: string;
-  
+  categories: {
+    name: string;
+    slug: string;
+    [key: string]: any;  
+  };
+  categoryName: string;
+  categorySlug: string;
+  [key: string]: any; 
+}
+
+// 메뉴
+export interface MenuItem {
+  id: number;
+  title: string;
+  type: 'category' | 'custom' | 'external';
+  category_slug?: string;
+  custom_slug?: string;
+  external_url?: string;
+  display_order: number;
+  is_visible: boolean;
+  icon?: string;
 }

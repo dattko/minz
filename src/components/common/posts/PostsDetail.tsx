@@ -7,6 +7,7 @@ import Comments from '../comments/Comments';
 import { Comment, Posts } from '@/types/dataType';
 import Btn from '../button/Btn';
 import Link from 'next/link';
+import { getUserInfo } from '@/components/auth/authSection/action';
 
 // 가상 데이터
 const initialComments: Comment[] = [
@@ -47,7 +48,7 @@ const initialComments: Comment[] = [
   },
 ];
 
-const PostsDetail: React.FC<Posts> = ({
+const PostsDetail: React.FC<Posts> = async({
   title,
   content,
   author,
@@ -57,6 +58,10 @@ const PostsDetail: React.FC<Posts> = ({
   category,
   categorySlug,
 }) => {
+
+  const user = await getUserInfo();
+  console.log()
+
   return (
     <article className={styles.posts__detail}>
       <div className={styles.posts__category}>
@@ -93,12 +98,16 @@ const PostsDetail: React.FC<Posts> = ({
         dangerouslySetInnerHTML={{ __html: content }}
       />
       <div className={styles.posts__option}>
+          <div>
+            {user?.nickname === author && (
+              <>
+                <Btn size='small' variant='outline-secondary'>수정</Btn>
+                <Btn size='small' variant='outline-secondary'>삭제</Btn>
+              </>
+            )}
+          </div>
         <div>
-          <Btn size='small' variant='outline-secondary'>수정</Btn>
-          <Btn size='small' variant='outline-secondary'>삭제</Btn>
-        </div>
-        <div>
-          <Btn size='small' variant='primary'><Heart size={12}/> 좋아요</Btn>
+          <Btn size='small' variant='primary'><Heart size={12}/> 추천</Btn>
           {/* <Btn size='small' variant='accent'><Ban size={12}/>신고</Btn> */}
           <Link href={`/posts/lists/${categorySlug}`}>
             <Btn size='small' variant='secondary'>목록</Btn>

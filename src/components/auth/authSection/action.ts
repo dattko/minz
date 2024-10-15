@@ -2,8 +2,8 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/supabaseServer'
-import { supabaseAdmin } from '@/lib/supabase/supabaseAdmin'
-import { v4 as uuidv4 } from 'uuid'
+import { fetchSupabaseData } from '@/lib/supabase/api'
+import { User } from '@/types/dataType';
 
 type State = {
   errorMsg?: {
@@ -107,3 +107,22 @@ export async function signup(prevState: State, formData: FormData): Promise<Stat
   return redirect('/');
 }
 
+
+
+export const getUserInfo = async (): Promise<User | null> => {
+  const supabase = createClient();
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data) {
+    console.error('Error fetching user:', error);
+    return null;
+  }
+
+  try {
+    const users: User[] = await fetchSupabaseData(`userinfo?id=eq.${data.user?.id}`);
+    return users[0] || null;
+  } catch (fetchError) {
+    console.error('Error fetching user info:', fetchError);
+    return null;
+  }
+};

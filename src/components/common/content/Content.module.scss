@@ -11,4 +11,33 @@
     min-width: 0;
     padding: 20px $contentGap $contentGap;
   }
+
+  &__header{
+    border-bottom: 1px solid $colorPrimary;
+    padding-bottom: 8px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    h4{
+      color: $colorPrimary;
+    }
+    svg{
+      color: $colorPrimary;
+      opacity: .6;
+      &:hover{
+        opacity: 1;
+      }
+    }
+  }
+  &__popular{
+    .content__header{
+      border-color: $colorAccent;
+    }
+    h4{
+      color: $colorAccent ;
+    }
+    svg{
+      color: $colorAccent;
+    }
+  }
 }

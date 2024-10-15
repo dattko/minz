@@ -4,18 +4,8 @@ import styles from './Header.module.scss';
 import HeaderSearch from './HeaderSerach';
 import Text from '@/components/text/Text';
 import { supabaseUrl, supabaseKey } from '@/lib/supabase/supabase';
-
-interface MenuItem {
-  id: number;
-  title: string;
-  type: 'category' | 'custom' | 'external';
-  category_slug?: string;
-  custom_slug?: string;
-  external_url?: string;
-  display_order: number;
-  is_visible: boolean;
-  icon?: string;
-}
+import { MenuItem } from '@/types/dataType';
+import { notFound } from 'next/navigation';
 
 const Header = async () => {
   const menuItems = await fetchMenuItems();
@@ -72,9 +62,9 @@ const getItemLink = (item: MenuItem): string => {
     case 'custom':
       return `/posts/lists/${item.custom_slug}`;
     case 'external':
-      return item.external_url || '/';
+      return item.external_url || notFound();
     default:
-      return '/';
+      return notFound();
   }
 }
 

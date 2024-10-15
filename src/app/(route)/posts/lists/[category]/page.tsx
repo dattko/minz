@@ -3,6 +3,9 @@ import { ContentWrap, Content } from '@/components/common/content';
 import List from '@/components/common/list/List';
 import { notFound } from 'next/navigation';
 import { supabaseUrl, supabaseKey } from '@/lib/supabase/supabase';
+import Btn from '@/components/common/button/Btn';
+import styles from './CategoryPage.module.scss';
+import Link from 'next/link';
 
 interface CategoryPageProps {
   params: { category: string };
@@ -32,17 +35,33 @@ async function getCategoryDetails(slug: string): Promise<CategoryDetails | null>
 }
 
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
-  const category = await getCategoryDetails(params.category);
-
-  if (!category) {
-    notFound();
+  let category: CategoryDetails | null = null;
+  let title: string = '';
+  let slug: string = params.category;
+  
+  if (params.category === 'popular') {
+    title = '오늘의 베스트';
+  } else {
+    category = await getCategoryDetails(params.category);
+    if (!category) {
+      notFound();
+    }
+    title = category.name;
+    slug = category.slug;
   }
 
   return (
     <ContentWrap>
-      <Content title={category.name}>
-        {/* {category.description && <p>{category.description}</p>} */}
-        <List categorySlug={category.slug} />
+      <Content title={title} className={slug}>
+        <List categorySlug={slug} showViews={params.category === 'popular'} />
+        <div className={styles.lists__option}>
+          <div className={styles.lists__pagenation}></div>
+          {params.category !== 'popular' && (
+            <Link href="/posts/write">
+              <Btn>작성하기</Btn>
+            </Link>
+          )}
+        </div>
       </Content>
     </ContentWrap>
   );

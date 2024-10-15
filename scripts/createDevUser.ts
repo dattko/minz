@@ -49,8 +49,7 @@ async function createOrVerifyDefaultUser(): Promise<User | null> {
 
     if (insertError) {
       console.error('userinfo 테이블 삽입 실패:', insertError);
-      // 사용자는 생성되었지만 userinfo 삽입에 실패한 경우 처리 방법 결정 필요
-      // 예: 사용자 삭제 또는 나중에 재시도 로직 추가
+      throw insertError;
     }
 
     console.log('생성 성공 :', newUser.user?.email);
