@@ -236,3 +236,36 @@ export async function getCategoryDetails(slug: string) {
   return data
 }
 
+export async function incrementViewCount(postId: string) {
+  const supabase = createClient()
+  
+  // 먼저 현재 조회수를 가져옵니다
+  const { data: currentPost, error: fetchError } = await supabase
+    .from('posts')
+    .select('views')
+    .eq('id', postId)
+    .single()
+
+  if (fetchError) {
+    console.error('Error fetching current view count:', fetchError)
+    throw new Error('Failed to fetch current view count')
+  }
+
+  const currentViews = currentPost?.views || 0
+  const newViews = currentViews + 1
+
+  // 그 다음 조회수를 업데이트합니다
+  const { data, error } = await supabase
+    .from('posts')
+    .update({ views: newViews })
+    .eq('id', postId)
+    .select()
+
+  if (error) {
+    console.error('Error incrementing view count:', error)
+    throw new Error('Failed to increment view count')
+  }
+
+  revalidatePath(`/posts/[slug]/[id]`)
+  return data[0]
+}

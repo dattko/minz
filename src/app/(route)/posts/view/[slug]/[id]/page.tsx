@@ -2,6 +2,7 @@ import React from 'react';
 import PostDetail from '@/components/common/posts/PostsDetail';
 import { fetchSupabaseData } from '@/lib/supabase/api';
 import { notFound } from 'next/navigation';
+import { incrementViewCount } from '@/lib/action/postsAction';
 
 interface PostPageProps {
   params: { slug: string; id: string };
@@ -19,7 +20,9 @@ async function getPostDetail(slug: string, id: string) {
       const categoryData = await fetchSupabaseData(categoryQuery);
       const categoryName = categoryData[0]?.name;
 
-      return { ...post, categoryName };
+      const updatedPost = await incrementViewCount(id);
+
+      return { ...updatedPost, categoryName };
     } else {
       return null;
     }
