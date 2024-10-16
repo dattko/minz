@@ -35,7 +35,7 @@ const PostEditPage = async ({ params }: PostEditPageProps) => {
     redirect('/error?message=게시글을 찾을 수 없습니다');
   } else if (postData) {
     initialData = postData;
-    title = `${postData.categories.name} 수정`;
+    title = `(수정) ${postData.categories.name}`;
 
     // 작성자 확인
     if (postData.author !== user.nickname) {

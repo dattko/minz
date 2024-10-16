@@ -15,14 +15,20 @@ interface PostFormProps {
 const PostForm: React.FC<PostFormProps> = ({ categorySlug, initialData }) => {
   const editorRef = useRef<{ getHTML: () => string; getLocalImages: () => any[]; setContent: (content: string) => void }>(null);
   const router = useRouter();
-  const [title, setTitle] = useState(initialData?.title || '');
+  const [title, setTitle] = useState('');
+  const [isEditorReady, setIsEditorReady] = useState(false);
 
   useEffect(() => {
-    if (initialData && editorRef.current) {
+    if (initialData) {
       setTitle(initialData.title);
-      editorRef.current.setContent(initialData.content);
     }
   }, [initialData]);
+
+  useEffect(() => {
+    if (isEditorReady && initialData && editorRef.current) {
+      editorRef.current.setContent(initialData.content);
+    }
+  }, [isEditorReady, initialData]);
 
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -79,7 +85,11 @@ const PostForm: React.FC<PostFormProps> = ({ categorySlug, initialData }) => {
           onChange={(e) => setTitle(e.target.value)}
         />
       </InputWrap>
-      <Tiptap ref={editorRef} />
+      <Tiptap 
+        ref={editorRef} 
+        onReady={() => setIsEditorReady(true)}
+        initialContent={initialData?.content}
+      />
       <div className='btn-row'>
         <Btn type="submit" variant='outline-primary'>
           {initialData ? '게시글 수정' : '게시글 작성'}

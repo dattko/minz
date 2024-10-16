@@ -11,11 +11,22 @@ interface LocalImage {
   url: string;
 }
 
-const Tiptap = forwardRef((props, ref) => {
+interface TiptapProps {
+  onReady?: () => void;
+  initialContent?: string;
+}
+
+export interface TiptapRef {
+  getHTML: () => string;
+  getLocalImages: () => { url: string; file: File }[];
+  setContent: (content: string) => void;
+}
+
+const Tiptap = forwardRef<TiptapRef, TiptapProps>(({ onReady, initialContent }, ref) => {
   const [localImages, setLocalImages] = useState<LocalImage[]>([]);
 
   const handleImageUpload = useCallback(async (file: File): Promise<string> => {
-    const id = Math.random().toString(36).substr(2, 9);
+    const id = Math.random().toString(36).slice(2, 11);
     const url = URL.createObjectURL(file);
     setLocalImages(prev => [...prev, { id, file, url }]);
     return url;
@@ -23,7 +34,10 @@ const Tiptap = forwardRef((props, ref) => {
 
   const editor = useEditor({
     extensions: editorExtensions,
-    immediatelyRender: false,
+    content: initialContent,
+    onCreate: ({ editor }) => {
+      if (onReady) onReady();
+    },
   })
 
   useImperativeHandle(ref, () => ({

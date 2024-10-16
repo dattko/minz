@@ -27,7 +27,7 @@ export default async function WritePostPage({ searchParams }: WritePostPageProps
     notFound();
   }
 
-  const title = `${categoryData.name} 작성하기`;
+  const title = `(작성) ${categoryData.name}`;
 
   return (
     <ContentWrap>
