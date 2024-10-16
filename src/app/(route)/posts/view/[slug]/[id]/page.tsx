@@ -4,18 +4,18 @@ import { fetchSupabaseData } from '@/lib/supabase/api';
 import { notFound } from 'next/navigation';
 
 interface PostPageProps {
-  params: { categorySlug: string; id: string };
+  params: { slug: string; id: string };
 }
 
-async function getPostDetail(categorySlug: string, id: string) {
-  const query = `posts?select=*&id=eq.${id}&category_slug=eq.${categorySlug}`;
+async function getPostDetail(slug: string, id: string) {
+  const query = `posts?select=*&id=eq.${id}&category_slug=eq.${slug}`;
   try {
     const data = await fetchSupabaseData(query);
     const post = data[0];
     
     if (post) {
       // 카테고리 이름을 가져오기 위한 추가 쿼리
-      const categoryQuery = `categories?select=name&slug=eq.${categorySlug}`;
+      const categoryQuery = `categories?select=name&slug=eq.${slug}`;
       const categoryData = await fetchSupabaseData(categoryQuery);
       const categoryName = categoryData[0]?.name;
 
@@ -30,7 +30,7 @@ async function getPostDetail(categorySlug: string, id: string) {
 }
 
 const PostPage: React.FC<PostPageProps> = async ({ params }) => {
-  const post = await getPostDetail(params.categorySlug, params.id);
+  const post = await getPostDetail(params.slug, params.id);
 
   if (!post) {
     notFound(); 
@@ -46,7 +46,7 @@ const PostPage: React.FC<PostPageProps> = async ({ params }) => {
       views={post.views}
       recommendations={post.recommendations}
       category={post.categoryName}
-      categorySlug={post.category_slug}
+      category_slug={post.category_slug}
     />
   );
 }

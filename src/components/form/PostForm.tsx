@@ -1,19 +1,28 @@
 'use client';
-import React, { useRef, FormEvent } from 'react';
+import React, { useRef, FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { InputWrap, Input } from '@/components/common/input';
 import Btn from '@/components/common/button/Btn';
 import Tiptap from '@/components/editor/Editor';
-import { createPosts } from '@/lib/action/postsAction';
-import { CreatePosts } from '@/types/dataType';
+import { createPosts, updatePosts } from '@/lib/action/postsAction';
+import { EditPost, Posts } from '@/types/dataType';
 
-interface CreatePostFormProps {
+interface PostFormProps {
   categorySlug: string;
+  initialData?: Posts;
 }
 
-const CreatePostForm: React.FC<CreatePostFormProps> = ({ categorySlug }) => {
-  const editorRef = useRef<{ getHTML: () => string; getLocalImages: () => any[] }>(null);
+const PostForm: React.FC<PostFormProps> = ({ categorySlug, initialData }) => {
+  const editorRef = useRef<{ getHTML: () => string; getLocalImages: () => any[]; setContent: (content: string) => void }>(null);
   const router = useRouter();
+  const [title, setTitle] = useState(initialData?.title || '');
+
+  useEffect(() => {
+    if (initialData && editorRef.current) {
+      setTitle(initialData.title);
+      editorRef.current.setContent(initialData.content);
+    }
+  }, [initialData]);
 
   const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -26,9 +35,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ categorySlug }) => {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = event.currentTarget;
-    const titleInput = form.elements.namedItem('title') as HTMLInputElement;
-
+    
     const rawLocalImages = editorRef.current?.getLocalImages() || [];
     const serializableLocalImages = await Promise.all(rawLocalImages.map(async img => ({
       id: img.id,
@@ -37,18 +44,22 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ categorySlug }) => {
       type: img.file.type
     })));
 
-    const postData: CreatePosts = {
-      title: titleInput.value,
+    const postData: EditPost = {
+      title,
       content: editorRef.current?.getHTML() || '',
       localImages: serializableLocalImages,
-      category_slug: categorySlug, // 직접 slug 사용
+      category_slug: categorySlug,
     };
 
     try {
-      await createPosts(postData);
-      // 서버 측에서 리다이렉트를 처리할 것입니다.
+      if (initialData) {
+        await updatePosts({ ...postData, id: initialData.id });
+      } else {
+        await createPosts(postData);
+      }
+      router.push(`/posts/lists/${categorySlug}`);
     } catch (error) {
-      console.error('작성 에러 :', error);
+      console.error('작성/수정 에러:', error);
       // 에러 처리 (예: 사용자에게 에러 메시지 표시)
     }
   };
@@ -64,15 +75,19 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ categorySlug }) => {
           required
           placeholder="제목을 입력하세요"
           name='title'
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
       </InputWrap>
       <Tiptap ref={editorRef} />
       <div className='btn-row'>
-        <Btn type="submit" variant='outline-primary'>게시글 작성</Btn>
+        <Btn type="submit" variant='outline-primary'>
+          {initialData ? '게시글 수정' : '게시글 작성'}
+        </Btn>
         <Btn type="button" variant='outline-secondary' onClick={handleCancel}>취소</Btn>
       </div>
     </form>
   );
 };
 
-export default CreatePostForm;
+export default PostForm;

@@ -1,3 +1,5 @@
+import { write } from 'fs'
+
 //유저 타입
 export interface User {
   id: string
@@ -29,7 +31,7 @@ export interface Posts {
   category?: string; // 포스트 카테고리
   status?: 'draft' | 'published' | 'archived'; // 포스트 상태
   featured_image?: string; // 대표 이미지 URL
-  categorySlug: string;
+  category_slug: string; 
   localImages?: {
     id: string;
     url: string;
@@ -38,7 +40,8 @@ export interface Posts {
   }[];
 }
 
-export interface CreatePosts {
+export interface EditPost {
+  id?: number
   title: string;
   content: string;
   localImages: {

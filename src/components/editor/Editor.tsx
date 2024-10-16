@@ -23,7 +23,7 @@ const Tiptap = forwardRef((props, ref) => {
 
   const editor = useEditor({
     extensions: editorExtensions,
-    immediatelyRender: false
+    immediatelyRender: false,
   })
 
   useImperativeHandle(ref, () => ({
@@ -32,6 +32,9 @@ const Tiptap = forwardRef((props, ref) => {
       url: img.url,
       file: img.file
     })),
+    setContent: (content: string) => {
+      editor?.commands.setContent(content);
+    }
   }));
 
   return (

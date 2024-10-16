@@ -1,6 +1,5 @@
 import { Extensions } from '@tiptap/react'
 import Document from '@tiptap/extension-document'
-import Paragraph from '@tiptap/extension-paragraph'
 import Text from '@tiptap/extension-text'
 import Blockquote from '@tiptap/extension-blockquote'
 import CustomParagraph from '@/components/layouts/CustomParagraph'
@@ -27,7 +26,6 @@ import Link from '@tiptap/extension-link'
 export const editorExtensions: Extensions = [
   Document,
   CustomParagraph,
-  Text,
   Bold,
   Italic,
   Strike,
@@ -35,8 +33,6 @@ export const editorExtensions: Extensions = [
   BulletList,
   ListItem,
   OrderedList,
-  Link,
-  Image,
   Blockquote,
   History,
   HardBreak,

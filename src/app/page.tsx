@@ -6,14 +6,14 @@ import List from '@/components/common/list/List';
 export default function Home() {
   return (
     <ContentWrap col={2}>
-      <Content title='공지사항' link="/posts/lists/notice">
+      <Content title='공지사항' link="/posts/lists/notice" className='notice'>
         <List categorySlug="notice" simple limit={10}/>
-      </Content>
-      <Content title='최신 글'>
-        <List categorySlug="recent" simple limit={10}/>
       </Content>
       <Content title='오늘의 베스트' className='popular' link="/posts/lists/popular">
         <List categorySlug="popular" showViews simple limit={10}/>
+      </Content>
+      <Content title='최신 글'>
+        <List categorySlug="recent" simple limit={10}/>
       </Content>
       <Content title='자유 게시판' link="/posts/lists/free">
         <List categorySlug="free" simple limit={10}/>

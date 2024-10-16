@@ -40,4 +40,15 @@
       color: $colorAccent;
     }
   }
+  &__notice{
+    .content__header{
+      border-color: $colorNavy;
+    }
+    h4{
+      color: $colorNavy ;
+    }
+    svg{
+      color: $colorNavy;
+    }
+  }
 }

@@ -59,7 +59,7 @@ const PostsDetail: React.FC<Posts> = async({
   views,
   recommendations,
   category,
-  categorySlug,
+  category_slug,
 }) => {
 
   const user = await getUserInfo();
@@ -104,15 +104,17 @@ const PostsDetail: React.FC<Posts> = async({
           <div>
             {user?.nickname === author && (
               <>
-                <Btn size='small' variant='outline-secondary' >수정</Btn>
-                <PostsDeleteBtn id={id} categorySlug={categorySlug}/>
+                <Link href={`/posts/edit/${id}?category=${category_slug}`}>
+                  <Btn size='small' variant='outline-secondary'>수정</Btn>
+                </Link>
+                <PostsDeleteBtn id={id} categorySlug={category_slug}/>
               </>
             )}
           </div>
         <div>
           <Btn size='small' variant='primary'><Heart size={12}/> 추천</Btn>
           {/* <Btn size='small' variant='accent'><Ban size={12}/>신고</Btn> */}
-          <Link href={`/posts/lists/${categorySlug}`}>
+          <Link href={`/posts/lists/${category_slug}`}>
             <Btn size='small' variant='secondary'>목록</Btn>
           </Link>
 

@@ -3,7 +3,16 @@ import LoginForm from '@/components/auth/loginForm/LoginForm';
 import { Content, ContentWrap } from '@/components/common/content';
 import Text from '@/components/text/Text';
 import styles from './Login.module.scss';
-const Login = () => {
+import { getUserInfo } from '@/components/auth/authSection/action';
+import { redirect } from 'next/navigation';
+
+const Login = async () => {
+    const user = await getUserInfo();
+
+    if (user) {
+      redirect('/');
+    }
+
   return (
     <div className={styles.login}>
       <div className={styles.login__wrap}>
