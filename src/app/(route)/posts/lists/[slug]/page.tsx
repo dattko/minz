@@ -7,34 +7,10 @@ import Btn from '@/components/common/button/Btn';
 import styles from './CategoryPage.module.scss';
 import Link from 'next/link';
 import { getUserInfo } from '@/components/auth/authSection/action';
+import { getCategoryDetails } from '@/lib/action/postsAction';
 
 interface CategoryPageProps {
   params: { slug: string };
-}
-
-interface CategoryDetails {
-  name: string;
-  description?: string;
-}
-
-async function getCategoryDetails(slug: string): Promise<CategoryDetails | null> {
-  if (slug === 'popular') {
-    return { name: '오늘의 베스트' };
-  }
-
-  try {
-    const response = await fetch(`${supabaseUrl}/rest/v1/categories?slug=eq.${slug}&select=name,description`, {
-      headers: {
-        'apikey': supabaseKey,
-        'Authorization': `Bearer ${supabaseKey}`,
-      },
-    });
-    const data = await response.json();
-    return data[0] || null;
-  } catch (error) {
-    console.error('Error fetching category details:', error);
-    return null;
-  }
 }
 
 const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
@@ -48,7 +24,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
   }
 
   const isAdmin = user?.usertype === 'Admin';
-  const isNoticeCategory = params.slug === 'notice'; 
+  const isNoticeCategory = params.slug === 'notice';
 
   const showWriteButton = params.slug !== 'popular' && (
     !isNoticeCategory || (isNoticeCategory && isAdmin)

@@ -1,4 +1,3 @@
-// app/posts/edit/[id]/page.tsx
 import React from 'react';
 import { ContentWrap, Content } from '@/components/common/content';
 import PostForm from '@/components/form/PostForm';

@@ -54,17 +54,17 @@ export interface EditPost {
 }
 
 export interface Comment {
-  id?: number;
-  post_id?: string | number; // 연관된 포스트 ID
+  id: number;
+  post_id?: number;
   author: string;
-  author_id?: string | number; // 작성자 ID
+  author_id: string;
   content: string;
-  created_at?: string;
-  updated_at?: string;
+  created_at: string;
+  updated_at: string;
   date: string;
-  // recommendations: number; // 댓글 추천 수
-  // is_approved: boolean; // 승인 여부
-  parent_id?: number; // 부모 댓글 ID (대댓글용)
+  // recommendations: number;
+  // is_approved: boolean;
+  parent_id?: number | null;
   replies?: Comment[];
 }
 
@@ -82,7 +82,7 @@ export interface ListItem {
     [key: string]: any;  
   };
   categoryName: string;
-  categorySlug: string;
+  category_slug: string;
   [key: string]: any; 
 }
 

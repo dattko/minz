@@ -15,9 +15,9 @@ interface ListProps {
 }
 
 async function getPostsByCategory(categorySlug: string, limit: number): Promise<ListItem[]> {
-  let query = `posts?select=*,category_slug`;
-
-  switch(categorySlug) {
+  let query = `posts?select=*,categories(name)`; // 카테고리 이름 포함
+  
+  switch (categorySlug) {
     case 'recent':
       query += `&order=created_at.desc`;
       break;
@@ -33,14 +33,9 @@ async function getPostsByCategory(categorySlug: string, limit: number): Promise<
 
   try {
     const data = await fetchSupabaseData(query);
-    // 카테고리 이름을 가져오기 위한 추가 쿼리
-    const categoryNames = await fetchSupabaseData(`categories?select=slug,name`);
-    const categoryMap = new Map(categoryNames.map((cat: any) => [cat.slug, cat.name]));
-
     return data.map((post: any) => ({
       ...post,
-      categoryName: categoryMap.get(post.category_slug),
-      categorySlug: post.category_slug
+      categoryName: post.categories.name 
     }));
   } catch (error) {
     console.error('Error fetching posts:', error);
@@ -59,7 +54,7 @@ const List: React.FC<ListProps> = async ({ categorySlug, showViews = false, limi
             {(categorySlug === 'recent' || categorySlug === 'popular') && post.categoryName && (
               <Text variant='p' color='gray' fontSize='xs'>[{post.categoryName}]</Text>
             )}
-            <Link href={`/posts/view/${post.categorySlug}/${post.id}`}>
+            <Link href={`/posts/view/${post.category_slug}/${post.id}`}>
               <Text variant='p' ellipsis>{post.title}</Text>
             </Link>
             <Text variant='p' color='orange' fontSize='xs'>{post.comment_count}</Text>
@@ -91,7 +86,8 @@ const List: React.FC<ListProps> = async ({ categorySlug, showViews = false, limi
     </ul>
   );
 };
-//isr 활용
+
+// ISR을 활용하여 60초마다 페이지를 재생성
 export const revalidate = 60;
 
 // 강제로 동적 렌더링을 활성화
