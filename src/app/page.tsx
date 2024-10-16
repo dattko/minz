@@ -27,3 +27,5 @@ export default function Home() {
     </ContentWrap>
   );
 }
+
+export const revalidate = 60;

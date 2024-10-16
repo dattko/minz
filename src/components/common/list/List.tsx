@@ -87,10 +87,6 @@ const List: React.FC<ListProps> = async ({ categorySlug, showViews = false, limi
   );
 };
 
-// ISR을 활용하여 60초마다 페이지를 재생성
-export const revalidate = 60;
-
-// 강제로 동적 렌더링을 활성화
 // export const dynamic = 'force-dynamic';
 
 export default List;
