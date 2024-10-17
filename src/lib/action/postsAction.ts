@@ -269,3 +269,50 @@ export async function incrementViewCount(postId: string) {
   revalidatePath(`/posts/[slug]/[id]`)
   return data[0]
 }
+
+export async function toggleRecommendation(postId: number) {
+  const supabase = createClient()
+  const user = await getUserInfo()
+
+  if (!user) {
+    throw new Error('로그인이 필요합니다.')
+  }
+
+  // 사용자가 이미 추천했는지 확인
+  const { data: existingRecommendation, error: checkError } = await supabase
+    .from('post_recommendations')
+    .select()
+    .eq('post_id', postId)
+    .eq('user_id', user.id)
+    .single()
+
+  if (checkError && checkError.code !== 'PGRST116') {
+    console.error('추천 확인 중 오류 발생:', checkError)
+    throw new Error('추천 확인 중 오류가 발생했습니다.')
+  }
+
+  let result;
+  if (existingRecommendation) {
+    // 추천 취소
+    result = await supabase.rpc('decrement_recommendation', {
+      post_id: postId,
+      user_id: user.id
+    })
+  } else {
+    // 추천 추가
+    result = await supabase.rpc('increment_recommendation', {
+      post_id: postId,
+      user_id: user.id
+    })
+  }
+
+  const { data, error } = result
+
+  if (error) {
+    console.error('추천 처리 중 오류 발생:', error)
+    throw new Error('추천 처리 중 오류가 발생했습니다.')
+  }
+
+  revalidatePath(`/posts/[slug]/[id]`)
+  return data
+}

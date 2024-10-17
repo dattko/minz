@@ -9,6 +9,7 @@ import Btn from '../button/Btn';
 import Link from 'next/link';
 import { getUserInfo } from '@/components/auth/authSection/action';
 import PostsDeleteBtn from './PostDeleteBtn';
+import RecommendationBtn from './RecommendationBtn';
 
 const PostsDetail: React.FC<Posts> = async({
   id,
@@ -72,7 +73,7 @@ const PostsDetail: React.FC<Posts> = async({
             )}
           </div>
         <div>
-          <Btn size='small' variant='primary'><Heart size={12}/> 추천</Btn>
+        <RecommendationBtn id={id} initialRecommendations={recommendations} initiallyRecommended={false}/>
           {/* <Btn size='small' variant='accent'><Ban size={12}/>신고</Btn> */}
           <Link href={`/posts/lists/${category_slug}`}>
             <Btn size='small' variant='secondary'>목록</Btn>

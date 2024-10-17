@@ -22,7 +22,7 @@ export interface Posts {
   content: string; // 포스트 내용
   author: string; // 작성자
   views: number;
-  recommendations?: number; // 추천 수
+  recommendations: number; // 추천 수
   link?: string;
   created_at: string;
   updated_at?: string;
