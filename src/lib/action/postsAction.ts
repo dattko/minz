@@ -20,7 +20,7 @@ function extractImageUrls(content: string): string[] {
 export async function createPosts(postData: EditPost) {
   const supabase = createClient()
   const { title, content, localImages, category_slug } = postData;
-  let postId: string
+  let postId: number
   try {
     const user = await getUserInfo()
     
@@ -52,25 +52,28 @@ export async function createPosts(postData: EditPost) {
       finalContent = finalContent.replace(img.localUrl, img.uploadedUrl)
     })
 
-    const { error } = await supabase
-      .from('posts')
-      .insert({ 
-        title,
-        content: finalContent,
-        author: user.nickname,
-        category_slug, 
-        status: 'published'
-      })
-      .single()
+    const { data, error } = await supabase
+    .from('posts')
+    .insert({ 
+      title,
+      content: finalContent,
+      author: user.nickname,
+      category_slug, 
+      status: 'published'
+    })
+    .select()
+    .single()
 
     if (error) throw error
+    if (!data) throw new Error('포스트 생성 실패: 데이터가 반환되지 않았습니다.')
+    postId = data.id
   } catch (error) {
     console.error('Error creating post:', error)
     return { errorMsg: (error as Error).message }
   }
-  revalidatePath(`/posts/lists/${category_slug}`, 'layout')
-  redirect(`/posts/lists/${category_slug}`)
-}
+    revalidatePath(`/posts/lists/${category_slug}`, 'layout')
+    redirect(`/posts/view/${category_slug}/${postId}`)
+  }
 
 export async function updatePosts(postData: EditPost) {
   const supabase = createClient()

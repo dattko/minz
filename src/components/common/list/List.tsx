@@ -48,7 +48,6 @@ async function getPostsByCategory(categorySlug: string, limit: number): Promise<
 const List: React.FC<ListProps> = async ({ categorySlug, showViews = false, limit = 30, simple }) => {
   const posts = await getPostsByCategory(categorySlug, limit);
   
-  revalidatePath('/posts/lists', 'layout');
   return (
     <ul className={styles.list__ul}>
       {posts.map((post) => (
