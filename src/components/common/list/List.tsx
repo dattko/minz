@@ -6,7 +6,6 @@ import { Eye, Heart } from 'lucide-react';
 import { ListItem } from '@/types/dataType';
 import { fetchSupabaseData } from '@/lib/supabase/api';
 import { formatDate } from '@/utils/utils';
-import { revalidatePath } from 'next/cache';
 
 interface ListProps {
   categorySlug: string;

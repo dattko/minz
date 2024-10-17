@@ -1,0 +1,14 @@
+.posts {
+  &__category{
+    border-bottom: 2px solid $colorPrimary;
+    padding-bottom: 6px;
+  }
+  &__detail{
+    padding-right: 30px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+}

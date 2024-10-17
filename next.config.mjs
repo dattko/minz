@@ -10,7 +10,7 @@ const nextConfig = {
     prependData: `@import "functions.scss"; @import "mixin.scss"; @import "base.scss";`,
   },
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
-  reactStrictMode: true,
+  reactStrictMode: false,
   experimental: {
      serverActions: {
       bodySizeLimit: '20mb',

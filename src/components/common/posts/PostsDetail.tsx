@@ -1,38 +1,36 @@
 import React from 'react';
 import styles from './PostsDetail.module.scss';
-import { User, Eye, Heart, Ban } from 'lucide-react'; 
+import { User, Eye, Heart } from 'lucide-react'; 
 import { formatDate } from '@/utils/utils';
 import Text from '@/components/text/Text';
-import Comments from '../comments/Comments';
 import {Posts } from '@/types/dataType';
 import Btn from '../button/Btn';
 import Link from 'next/link';
-import { getUserInfo } from '@/components/auth/authSection/action';
 import PostsDeleteBtn from './PostDeleteBtn';
 import RecommendationBtn from './RecommendationBtn';
-import { checkUserRecommendation } from '@/lib/action/postsAction';
 
-const PostsDetail: React.FC<Posts> = async({
+interface PostsDetailProps extends Posts {
+  nickname?: string
+  isRecommended: boolean
+}
+
+const PostsDetail: React.FC<PostsDetailProps> = async({
   id,
   title,
   content,
   author,
   created_at,
-  views,
   recommendations,
   category,
   category_slug,
+  nickname,
+  views,
+  isRecommended
 }) => {
 
-  const user = await getUserInfo();
-  
-  let isRecommended = false;
-  if (user) {
-    isRecommended = await checkUserRecommendation(id, user.id);
-  }
-  
+
   return (
-    <article className={styles.posts__detail}>
+    <>
       <div className={styles.posts__category}>
         <Text variant='h2' fontSize='sm' color='blue'>{category}</Text>
       </div>
@@ -68,7 +66,7 @@ const PostsDetail: React.FC<Posts> = async({
       />
       <div className={styles.posts__option}>
           <div>
-            {user?.nickname === author && (
+            {nickname === author && (
               <>
                 <Link href={`/posts/edit/${id}?category=${category_slug}`}>
                   <Btn size='small' variant='outline-secondary'>수정</Btn>
@@ -85,10 +83,7 @@ const PostsDetail: React.FC<Posts> = async({
           </Link>
         </div>
       </div>
-      <footer className={styles.posts__footer}>
-        <Comments postId={id} />
-      </footer>
-    </article>
+    </>
   );
 };
 

@@ -3,9 +3,9 @@ import { createClient } from '@/lib/supabase/supabaseServer'
 import { v4 as uuidv4 } from 'uuid'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { EditPost } from '@/types/dataType'
+import { EditPost, Posts } from '@/types/dataType'
 import { getUserInfo } from '@/components/auth/authSection/action'
-import { Console } from 'console'
+import { fetchSupabaseData } from '../supabase/api'
 
 function extractImageUrls(content: string): string[] {
   const regex = /<img[^>]+src="?([^"\s]+)"?\s*/gi;
@@ -240,7 +240,7 @@ export async function getCategoryDetails(slug: string) {
 
 
 
-export async function incrementViewCount(postId: string): Promise<{ views: number }> {
+export async function incrementViewCount(postId: number): Promise<{ views: number }> {
   const supabase = createClient()
   
   const { data, error } = await supabase.rpc('increment_view_count', { post_id: postId })
@@ -249,7 +249,7 @@ export async function incrementViewCount(postId: string): Promise<{ views: numbe
     console.error('Error incrementing view count:', error)
     throw new Error(`Failed to increment view count: ${error.message}`)
   }
-  console.log('Data returned from increment_view_count:', data)
+  console.log('조회수 :', data)
   if (!data) {
     throw new Error('No data returned from increment_view_count')
   }
@@ -322,4 +322,27 @@ export async function checkUserRecommendation(postId: number, userId: string): P
   }
 
   return !!data
+}
+
+
+export async function getPostDetail(slug: string, id: number): Promise<Posts | null> {
+  const query = `posts?select=*,categories(name)&id=eq.${id}&category_slug=eq.${slug}`;
+  try {
+    const data = await fetchSupabaseData(query);
+    let post = data[0];
+
+    if (post) {
+      post = {
+        ...post,
+        categoryName: post.categories?.name
+      };
+
+      return post;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching post detail:', error);
+    throw error; // 에러를 상위로 전파합니다
+  }
 }

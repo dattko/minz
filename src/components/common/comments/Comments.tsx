@@ -11,24 +11,25 @@ import { formatDate } from '@/utils/utils';
 
 interface CommentsProps {
   postId: number;
+  userInfo: any;
 }
 
-const Comments: React.FC<CommentsProps> = ({ postId }) => {
+const Comments: React.FC<CommentsProps> = ({ postId, userInfo }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [newReply, setNewReply] = useState('');
   const [replyingTo, setReplyingTo] = useState<number | null>(null);
   const [editingComment, setEditingComment] = useState<number | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<any>(userInfo);
   const mainComments = comments.filter(comment => comment.parent_id === null);
 
 
 
   useEffect(() => {
     const fetchData = async () => {
-      const userInfo = await getUserInfo();
-      setUser(userInfo);
-      const fetchedComments = await fetchComments(postId);
+      const [fetchedComments] = await Promise.all([
+        fetchComments(postId)
+      ]);
       setComments(fetchedComments);
     };
     fetchData();

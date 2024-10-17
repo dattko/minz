@@ -1,63 +1,53 @@
 import React from 'react';
 import PostDetail from '@/components/common/posts/PostsDetail';
-import { fetchSupabaseData } from '@/lib/supabase/api';
 import { notFound } from 'next/navigation';
-import { incrementViewCount } from '@/lib/action/postsAction';
-import { Posts } from '@/types/dataType';
+import { getPostDetail } from '@/lib/action/postsAction';
+import { getUserInfo } from '@/components/auth/authSection/action';
+import { checkUserRecommendation, incrementViewCount } from '@/lib/action/postsAction';
+import styles from './PostPage.module.scss';
+import Comments from '@/components/common/comments/Comments';
 
 interface PostPageProps {
-  params: { slug: string; id: string };
+  params: { slug: string; id: number };
 }
 
-async function getPostDetail(slug: string, id: string): Promise<Posts | null> {
-  const query = `posts?select=*,categories(name)&id=eq.${id}&category_slug=eq.${slug}`;
-  try {
-    const data = await fetchSupabaseData(query);
-    let post = data[0];
-
-    if (post) {
-      const updatedViewCount = await incrementViewCount(id);
-      
-      post = {
-        ...post,
-        views: updatedViewCount.views,
-        categoryName: post.categories?.name
-      };
-
-      return post;
-    } else {
-      return null;
-    }
-  } catch (error) {
-    console.error('Error fetching post detail:', error);
-    throw error; // 에러를 상위로 전파합니다
-  }
-}
 
 const PostPage: React.FC<PostPageProps> = async ({ params }) => {
-  try {
-    const post = await getPostDetail(params.slug, params.id);
 
-    if (!post) {
-      notFound();
-    }
+  const user = await getUserInfo();
+  const post = await getPostDetail(params.slug, params.id);
+  const viewCount = await incrementViewCount(params.id);
+  let isRecommended = false;
+  
+  if (user) {
+    isRecommended = await checkUserRecommendation(params.id, user.id);
+  }
 
-    return (
+
+  if (!post) {
+    notFound();
+  }
+
+  return (
+    <article className={styles.posts__detail}>
       <PostDetail
         id={post.id}
         title={post.title}
         content={post.content}
         author={post.author}
         created_at={post.created_at}
-        views={post.views}
         recommendations={post.recommendations}
         category={post.categoryName || ''}
         category_slug={post.category_slug}
+        views={viewCount.views}
+        isRecommended={isRecommended}
+        nickname={user?.nickname}
       />
-    );
-  } catch (error) {
-    notFound(); 
-  }
+      <footer className={styles.posts__footer}>
+        <Comments postId={post.id} userInfo={user}/>
+      </footer>
+    </article>
+  );
 }
 
 export default PostPage;
