@@ -68,7 +68,7 @@ export async function createPosts(postData: EditPost) {
     console.error('Error creating post:', error)
     return { errorMsg: (error as Error).message }
   }
-  revalidatePath('/', 'layout')
+  revalidatePath(`/posts/lists/${category_slug}`, 'layout')
   redirect(`/posts/lists/${category_slug}`)
 }
 
@@ -158,7 +158,7 @@ export async function updatePosts(postData: EditPost) {
     return { errorMsg: (error as Error).message }
   }
   
-  revalidatePath('/', 'layout')
+  revalidatePath(`/posts/lists/${category_slug}`, 'layout')
   redirect(`/posts/view/${category_slug}/${id}`)
 }
 
@@ -213,7 +213,7 @@ export async function deletePosts(postId: number, categorySlug: string) {
     return { errorMsg: (error as Error).message }
   }
 
-  revalidatePath('/', 'layout')
+  revalidatePath(`/posts/lists/${categorySlug}`, 'layout')
   redirect(`/posts/lists/${categorySlug}`)
 }
 
