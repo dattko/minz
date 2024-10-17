@@ -16,9 +16,9 @@ export async function generateMetadata(): Promise<Metadata> {
     // alternates: {
     //   canonical: "https://aboutmin.info",
     // },
-    // icons: {
-    //   icon: "/favicon.png",
-    // },
+    icons: {
+      icon: "/favicon.png",
+    },
     // openGraph: {
     //   title,
     //   description,
