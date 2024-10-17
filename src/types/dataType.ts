@@ -32,6 +32,7 @@ export interface Posts {
   status?: 'draft' | 'published' | 'archived'; // 포스트 상태
   featured_image?: string; // 대표 이미지 URL
   category_slug: string; 
+  categoryName?: string;
   localImages?: {
     id: string;
     url: string;

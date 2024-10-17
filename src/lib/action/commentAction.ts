@@ -4,6 +4,7 @@ import { Comment } from '@/types/dataType'
 import { getUserInfo } from '@/components/auth/authSection/action'
 import { fetchSupabaseData } from '../supabase/api'
 import { supabaseUrl, supabaseKey } from '../supabase/supabase'
+import { redirect } from 'next/navigation'
 
 export async function fetchComments(postId: number): Promise<Comment[]> {
   const data = await fetchSupabaseData(`comments?select=*&post_id=eq.${postId}&order=created_at.asc`);
@@ -12,7 +13,9 @@ export async function fetchComments(postId: number): Promise<Comment[]> {
 
 export async function addComment(postId: number, content: string): Promise<void> {
   const user = await getUserInfo()
-  if (!user) throw new Error('로그인 해주세요.')
+  if (!user) {
+    redirect('/auth/login');
+  }
 
   const response = await fetch(`${supabaseUrl}/rest/v1/comments`, {
     method: 'POST',
@@ -32,15 +35,18 @@ export async function addComment(postId: number, content: string): Promise<void>
   });
 
   if (!response.ok) {
-    throw new Error(`대글 추가 실패 : ${response.status}`);
+    throw new Error(`댓글 추가 실패 : ${response.status}`);
   }
 
   revalidatePath(`/posts/${postId}`);
+
 }
 
 export async function addReply(postId: number, parentId: number, content: string): Promise<void> {
   const user = await getUserInfo()
-  if (!user) throw new Error('로그인 해주세요.')
+  if (!user) {
+    redirect('/auth/login');
+  }
 
   const response = await fetch(`${supabaseUrl}/rest/v1/comments`, {
     method: 'POST',
@@ -60,7 +66,7 @@ export async function addReply(postId: number, parentId: number, content: string
   });
 
   if (!response.ok) {
-    throw new Error(`답글 달기 실패: ${response.status}`);
+    throw new Error(`대댓글 달기 실패: ${response.status}`);
   }
 
   revalidatePath(`/posts/${postId}`);

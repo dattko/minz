@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { getUserInfo } from '@/components/auth/authSection/action';
 import PostsDeleteBtn from './PostDeleteBtn';
 import RecommendationBtn from './RecommendationBtn';
+import { checkUserRecommendation } from '@/lib/action/postsAction';
 
 const PostsDetail: React.FC<Posts> = async({
   id,
@@ -24,8 +25,11 @@ const PostsDetail: React.FC<Posts> = async({
 }) => {
 
   const user = await getUserInfo();
-
-
+  let isRecommended = false;
+  if (user) {
+    isRecommended = await checkUserRecommendation(id, user.id);
+  }
+  
   return (
     <article className={styles.posts__detail}>
       <div className={styles.posts__category}>
@@ -59,7 +63,7 @@ const PostsDetail: React.FC<Posts> = async({
       </header>
       <div 
         className={styles.posts__content}
-        dangerouslySetInnerHTML={{ __html: content }}
+        dangerouslySetInnerHTML={{ __html: content || '' }}
       />
       <div className={styles.posts__option}>
           <div>
@@ -73,12 +77,11 @@ const PostsDetail: React.FC<Posts> = async({
             )}
           </div>
         <div>
-        <RecommendationBtn id={id} initialRecommendations={recommendations} initiallyRecommended={false}/>
+        <RecommendationBtn id={id} initialRecommendations={recommendations} initiallyRecommended={isRecommended}/>
           {/* <Btn size='small' variant='accent'><Ban size={12}/>신고</Btn> */}
           <Link href={`/posts/lists/${category_slug}`}>
             <Btn size='small' variant='secondary'>목록</Btn>
           </Link>
-
         </div>
       </div>
       <footer className={styles.posts__footer}>

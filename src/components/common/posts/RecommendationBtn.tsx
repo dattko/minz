@@ -2,7 +2,7 @@
 import { toggleRecommendation } from '@/lib/action/postsAction';
 import Btn from '../button/Btn';
 import React, { useState } from 'react';
-import { Heart } from 'lucide-react';
+import { ThumbsUp } from 'lucide-react';
 
 interface RecommendationBtnProps {
   id: number;
@@ -20,12 +20,11 @@ const RecommendationBtn: React.FC<RecommendationBtnProps> = ({ id, initialRecomm
 
     setIsProcessing(true);
     try {
-      const updatedData = await toggleRecommendation(id);
-      setRecommendations(updatedData.recommendations);
-      setIsRecommended(!isRecommended);
-    } catch (error) {
-      console.error('추천 처리 중 오류 발생:', error);
-      alert(error instanceof Error ? error.message : '추천 처리 중 오류가 발생했습니다.');
+      const result = await toggleRecommendation(id);
+      setRecommendations(result.recommendations);
+      setIsRecommended(result.isRecommended);
+    } catch {
+      console.error('추천 처리 중 오류 발생');
     } finally {
       setIsProcessing(false);
     }
@@ -34,12 +33,12 @@ const RecommendationBtn: React.FC<RecommendationBtnProps> = ({ id, initialRecomm
   return (
     <Btn 
       size='small' 
-      variant={isRecommended ? 'outline-primary' : 'primary'} 
+      variant={isRecommended ? 'primary' : 'outline-primary'} 
       onClick={handleToggleRecommendation} 
       disabled={isProcessing}
     >
-      <Heart size={12} fill={isRecommended ? 'currentColor' : 'none'}/> 
-      {isRecommended ? '추천 취소' : '추천'} ({recommendations})
+      <ThumbsUp size={11}/> 
+      {isRecommended ? '취소' : '추천'} ({recommendations})
     </Btn>
   );
 }

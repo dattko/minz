@@ -34,16 +34,18 @@ const Comments: React.FC<CommentsProps> = ({ postId }) => {
     fetchData();
   }, [postId]);
 
+
+  
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newComment.trim() === '') return;
 
-    if(window.confirm('댓글을 작성하시겠습니까?')){
+    // if(window.confirm('댓글을 작성하시겠습니까?')){
     await addComment(postId, newComment);
     setNewComment('');
     const updatedComments = await fetchComments(postId);
     setComments(updatedComments);
-    }
+    // }
   };
 
   const handleReplySubmit = async (e: React.FormEvent, parentId: number) => {
@@ -51,13 +53,13 @@ const Comments: React.FC<CommentsProps> = ({ postId }) => {
 
     if (newReply.trim() === '') return;
 
-    if(window.confirm('대댓글을 작성하시겠습니까?')){
+    // if(window.confirm('대댓글을 작성하시겠습니까?')){
       await addReply(postId, parentId, newReply);
       setNewReply('');
       setReplyingTo(null);
       const updatedComments = await fetchComments(postId);
       setComments(updatedComments);
-    }
+    // }
   };
 
   const handleCommentEdit = async (commentId: number, newContent: string) => {
@@ -76,6 +78,9 @@ const Comments: React.FC<CommentsProps> = ({ postId }) => {
         setComments(updatedComments);
     }
   };
+
+
+  const playceholder = user ? '댓글을 입력해 주세요.' : '로그인 후 댓글을 작성할 수 있습니다.';
 
   return (
     <div className={styles.comments}>
@@ -176,10 +181,11 @@ const Comments: React.FC<CommentsProps> = ({ postId }) => {
                     value={newReply}
                     onChange={(e) => setNewReply(e.target.value)}
                     maxLength={120}
-                    placeholder="대댓글을 입력해 주세요."
+                    placeholder={playceholder}
                     className={styles.comments__input}
+                    disabled={!user}
                   />
-                  <Btn type="submit" size='small'>
+                  <Btn type="submit" size='small' disabled={!user}>
                     작성
                   </Btn>
                 </form>
@@ -193,10 +199,11 @@ const Comments: React.FC<CommentsProps> = ({ postId }) => {
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           maxLength={120}
-          placeholder="댓글을 입력해 주세요."
+          placeholder={playceholder}
           className={styles.comments__input}
+          disabled={!user}
         />
-        <Btn type="submit" size='small' variant='outline-primary'>
+        <Btn type="submit" size='small' variant='outline-primary' disabled={!user}>
           작성
         </Btn>
       </form>

@@ -236,83 +236,88 @@ export async function getCategoryDetails(slug: string) {
   return data
 }
 
-export async function incrementViewCount(postId: string) {
+
+
+export async function incrementViewCount(postId: string): Promise<{ views: number }> {
   const supabase = createClient()
   
-  // 먼저 현재 조회수를 가져옵니다
-  const { data: currentPost, error: fetchError } = await supabase
-    .from('posts')
-    .select('views')
-    .eq('id', postId)
-    .single()
-
-  if (fetchError) {
-    console.error('Error fetching current view count:', fetchError)
-    throw new Error('Failed to fetch current view count')
-  }
-
-  const currentViews = currentPost?.views || 0
-  const newViews = currentViews + 1
-
-  // 그 다음 조회수를 업데이트합니다
-  const { data, error } = await supabase
-    .from('posts')
-    .update({ views: newViews })
-    .eq('id', postId)
-    .select()
+  const { data, error } = await supabase.rpc('increment_view_count', { post_id: postId })
 
   if (error) {
     console.error('Error incrementing view count:', error)
-    throw new Error('Failed to increment view count')
+    throw new Error(`Failed to increment view count: ${error.message}`)
+  }
+  console.log('Data returned from increment_view_count:', data)
+  if (!data) {
+    throw new Error('No data returned from increment_view_count')
   }
 
-  revalidatePath(`/posts/[slug]/[id]`)
-  return data[0]
+  return { views: data.views }
 }
 
 export async function toggleRecommendation(postId: number) {
-  const supabase = createClient()
-  const user = await getUserInfo()
+  const supabase = createClient();
+  const user = await getUserInfo();
 
   if (!user) {
-    throw new Error('로그인이 필요합니다.')
+    throw new Error('로그인이 필요합니다.');
   }
 
-  // 사용자가 이미 추천했는지 확인
+  console.log('Checking existing recommendation...');
   const { data: existingRecommendation, error: checkError } = await supabase
     .from('post_recommendations')
     .select()
     .eq('post_id', postId)
     .eq('user_id', user.id)
-    .single()
+    .single();
 
   if (checkError && checkError.code !== 'PGRST116') {
-    console.error('추천 확인 중 오류 발생:', checkError)
-    throw new Error('추천 확인 중 오류가 발생했습니다.')
+    console.error('추천 확인 중 오류 발생:', checkError);
+    throw new Error('추천 확인 중 오류가 발생했습니다.');
   }
 
   let result;
   if (existingRecommendation) {
-    // 추천 취소
     result = await supabase.rpc('decrement_recommendation', {
-      post_id: postId,
-      user_id: user.id
-    })
+      p_post_id: postId,
+      p_user_id: user.id  
+    });
   } else {
-    // 추천 추가
     result = await supabase.rpc('increment_recommendation', {
-      post_id: postId,
-      user_id: user.id
-    })
+      p_post_id: postId,  
+      p_user_id: user.id  
+    });
   }
 
-  const { data, error } = result
+  const { data, error } = result;
 
   if (error) {
-    console.error('추천 처리 중 오류 발생:', error)
-    throw new Error('추천 처리 중 오류가 발생했습니다.')
+    console.error('추천 처리 중 오류 발생:', error);
+    throw new Error('추천 처리 중 오류가 발생했습니다.');
   }
 
-  revalidatePath(`/posts/[slug]/[id]`)
-  return data
+  const isRecommended = await checkUserRecommendation(postId, user.id);
+
+  revalidatePath(`/posts/view/[slug]/[id]`);
+  return { recommendations: data.recommendations, isRecommended };
+}
+
+
+
+export async function checkUserRecommendation(postId: number, userId: string): Promise<boolean> {
+  const supabase = createClient()
+
+  const { data, error } = await supabase
+    .from('post_recommendations')
+    .select('id')
+    .eq('post_id', postId)
+    .eq('user_id', userId)
+    .maybeSingle()
+
+  if (error) {
+    console.error('추천 확인 중 오류 발생:', error)
+    return false;  // 에러 발생 시 기본적으로 false 반환
+  }
+
+  return !!data
 }

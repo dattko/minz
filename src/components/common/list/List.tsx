@@ -87,6 +87,4 @@ const List: React.FC<ListProps> = async ({ categorySlug, showViews = false, limi
   );
 };
 
-// export const dynamic = 'force-dynamic';
-
 export default List;
