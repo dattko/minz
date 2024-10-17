@@ -24,7 +24,7 @@ const PostsDetail: React.FC<PostsDetailProps> = async({
   category,
   category_slug,
   nickname,
-  views,
+  unique_views,
   isRecommended
 }) => {
 
@@ -42,7 +42,7 @@ const PostsDetail: React.FC<PostsDetailProps> = async({
           <div className={styles.posts__stats}>
             <div className={styles.posts__stat}>
               <Eye size={14} />
-              <Text variant='p' fontSize='sm'>{views}</Text>
+              <Text variant='p' fontSize='sm'>{unique_views}</Text>
             </div>
             <div className={styles.posts__stat}>
               <Heart size={14} />

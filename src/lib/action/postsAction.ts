@@ -241,7 +241,7 @@ export async function getCategoryDetails(slug: string) {
 
 
 
-export async function incrementViewCount(postId: number, viewerIp: string): Promise<{ views: number }> {
+export async function incrementViewCount(postId: number, viewerIp: string): Promise<{ unique_views: number }> {
   const supabase = createClient();
 
   const { data, error } = await supabase.rpc('increment_view_count', { 
@@ -254,11 +254,11 @@ export async function incrementViewCount(postId: number, viewerIp: string): Prom
       throw new Error(`Failed to increment view count: ${error.message}`);
   }
 
-  if (!data || typeof data.views !== 'number') {
+  if (!data || typeof data.unique_views !== 'number') {
       throw new Error('Invalid data returned from increment_view_count');
   }
 
-  return { views: data.views };
+  return { unique_views: data.unique_views };
 }
 
 

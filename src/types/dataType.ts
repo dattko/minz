@@ -21,7 +21,7 @@ export interface Posts {
   title: string;
   content: string; // 포스트 내용
   author: string; // 작성자
-  views?: number;
+  unique_views: number;
   recommendations: number; // 추천 수
   link?: string;
   created_at: string;
@@ -75,7 +75,8 @@ export interface ListItem {
   id: number | string;
   title: string;
   created_at: string;
-  views: number;
+  // views: number;
+  unique_views: number;
   comment_count: number;
   categories: {
     name: string;

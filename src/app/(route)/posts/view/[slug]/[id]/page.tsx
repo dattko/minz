@@ -22,14 +22,14 @@ const PostPage: React.FC<PostPageProps> = async ({ params }) => {
 
   const headersList = headers();
   const clientIp = headersList.get('x-forwarded-for') || 'unknown';
+  let unique_views = post.unique_views;
   
-  let views = post.views;
   try {
     const result = await incrementViewCount(parseInt(params.id), clientIp);
-    views = result.views;
+    unique_views = result.unique_views;
   } catch (error) {
     console.error('Failed to increment view count:', error);
-    // 여기서는 오류를 무시하고 기존 views를 사용합니다.
+    // 여기서는 오류를 무시하고 기존 unique_views를 사용합니다.
   }
 
   const initialComments = await fetchComments(parseInt(params.id));
@@ -50,7 +50,7 @@ const PostPage: React.FC<PostPageProps> = async ({ params }) => {
         recommendations={post.recommendations}
         category={post.categoryName || ''}
         category_slug={post.category_slug}
-        views={views}
+        unique_views={unique_views}
         isRecommended={isRecommended}
         nickname={user?.nickname}
       />

@@ -68,7 +68,7 @@ const List: React.FC<ListProps> = async ({ categorySlug, showViews = false, limi
           {(showViews || !simple) && (
             <div className={styles.list__views}>
               <Eye size={12} color='gray'/>
-              <Text variant='p' fontSize='xs' color='gray'>{post.views}</Text>
+              <Text variant='p' fontSize='xs' color='gray'>{post.unique_views}</Text>
             </div>
           )}
           {!simple && (
