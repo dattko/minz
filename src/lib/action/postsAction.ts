@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation'
 import { EditPost, Posts } from '@/types/dataType'
 import { getUserInfo } from '@/components/auth/authSection/action'
 import { fetchSupabaseData } from '../supabase/api'
+import { NextApiRequest, NextApiResponse } from 'next';
 
 function extractImageUrls(content: string): string[] {
   const regex = /<img[^>]+src="?([^"\s]+)"?\s*/gi;
@@ -240,22 +241,26 @@ export async function getCategoryDetails(slug: string) {
 
 
 
-export async function incrementViewCount(postId: number): Promise<{ views: number }> {
-  const supabase = createClient()
-  
-  const { data, error } = await supabase.rpc('increment_view_count', { post_id: postId })
+export async function incrementViewCount(postId: number, viewerIp: string): Promise<{ views: number }> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.rpc('increment_view_count', { 
+      p_post_id: postId,
+      p_ip_address: viewerIp  
+  });
 
   if (error) {
-    console.error('Error incrementing view count:', error)
-    throw new Error(`Failed to increment view count: ${error.message}`)
-  }
-  console.log('조회수 :', data)
-  if (!data) {
-    throw new Error('No data returned from increment_view_count')
+      console.error('Error incrementing view count:', error);
+      throw new Error(`Failed to increment view count: ${error.message}`);
   }
 
-  return { views: data.views }
+  if (!data || typeof data.views !== 'number') {
+      throw new Error('Invalid data returned from increment_view_count');
+  }
+
+  return { views: data.views };
 }
+
 
 export async function toggleRecommendation(postId: number) {
   const supabase = createClient();
