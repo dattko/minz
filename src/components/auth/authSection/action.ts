@@ -20,7 +20,8 @@ const ERROR_MESSAGE = {
   emailAlreadyExists: '이 이메일은 이미 등록되어 있습니다. 로그인 해주세요.',
   invalidEmail: '유효한 이메일 주소를 입력해주세요.',
   weakPassword: '비밀번호가 너무 약합니다. 더 강력한 비밀번호를 선택해주세요.',
-  unexpectedError: '예상치 못한 오류가 발생했습니다. 나중에 다시 시도해주세요.'
+  unexpectedError: '예상치 못한 오류가 발생했습니다. 나중에 다시 시도해주세요.',
+  nicknameTaken: '이미 사용 중인 닉네임입니다. 다른 닉네임을 선택해주세요.'
 };
 
 export async function login(formData: FormData) {
@@ -57,17 +58,30 @@ export async function logout() {
 
 
 export async function signup(prevState: State, formData: FormData): Promise<State> {
-  const userType = formData.get("userType") as UserType;
-const email = formData.get('email') as string;
+  const email = formData.get('email') as string;
   const password = formData.get('password') as string;
   const name = formData.get('name') as string;
   const nickname = formData.get('nickname') as string;
   const supabase = createClient();
   const errorMsg: State['errorMsg'] = {};
 
-
   try {
-    const { error } = await supabase.auth.signUp({
+    const { data: existingUsers, error: nicknameCheckError } = await supabase
+      .from('userinfo')  // 'profiles' 테이블을 사용합니다. 실제 테이블 이름에 맞게 수정해주세요.
+      .select('id')
+      .eq('nickname', nickname)
+      .limit(1);
+
+    if (nicknameCheckError) {
+      console.error('닉네임 중복 확인 중 오류:', nicknameCheckError);
+      return { errorMsg: { nickname: ERROR_MESSAGE.unexpectedError } };
+    }
+
+    if (existingUsers && existingUsers.length > 0) {
+      return { errorMsg: { nickname: ERROR_MESSAGE.nicknameTaken } };
+    }
+
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -78,22 +92,19 @@ const email = formData.get('email') as string;
       },
     });
 
-    // 서버 에러 처리
     if (error) {
       if (error.message.includes('User already registered')) {
         errorMsg.email = ERROR_MESSAGE.emailAlreadyExists;
       } else if (error.message.includes('invalid email')) {
         errorMsg.email = ERROR_MESSAGE.invalidEmail;
-      } else if (error.message.includes('password is too weak')) {errorMsg.password = ERROR_MESSAGE.weakPassword;
-      }else if (password.length < 6) {
+      } else if (error.message.includes('password is too weak')) {
+        errorMsg.password = ERROR_MESSAGE.weakPassword;
+      } else if (password.length < 6) {
         errorMsg.password = '비밀번호는 최소 6자 이상이어야 합니다.';
       } else {
         console.error('인증 오류:', error);
         return { errorMsg: { email: ERROR_MESSAGE.unexpectedError } };
       }
-    }
-
-    if (Object.keys(errorMsg).length > 0) {
       return { errorMsg };
     }
 
