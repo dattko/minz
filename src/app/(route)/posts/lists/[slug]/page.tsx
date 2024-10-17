@@ -49,4 +49,4 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
 
 export default CategoryPage;
 
-export const revalidate = 60;
+// export const revalidate = 60;

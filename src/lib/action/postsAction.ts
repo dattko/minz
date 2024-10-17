@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { EditPost } from '@/types/dataType'
 import { getUserInfo } from '@/components/auth/authSection/action'
+import { Console } from 'console'
 
 function extractImageUrls(content: string): string[] {
   const regex = /<img[^>]+src="?([^"\s]+)"?\s*/gi;
@@ -19,7 +20,7 @@ function extractImageUrls(content: string): string[] {
 export async function createPosts(postData: EditPost) {
   const supabase = createClient()
   const { title, content, localImages, category_slug } = postData;
-
+  let postId: string
   try {
     const user = await getUserInfo()
     
@@ -51,7 +52,7 @@ export async function createPosts(postData: EditPost) {
       finalContent = finalContent.replace(img.localUrl, img.uploadedUrl)
     })
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('posts')
       .insert({ 
         title,
@@ -60,15 +61,14 @@ export async function createPosts(postData: EditPost) {
         category_slug, 
         status: 'published'
       })
+      .single()
 
     if (error) throw error
-
-
   } catch (error) {
     console.error('Error creating post:', error)
     return { errorMsg: (error as Error).message }
   }
-  revalidatePath('/posts')
+  revalidatePath('/', 'layout')
   redirect(`/posts/lists/${category_slug}`)
 }
 
@@ -153,14 +153,13 @@ export async function updatePosts(postData: EditPost) {
       .eq('id', id)
 
     if (error) throw error
-
   } catch (error) {
     console.error('Error updating post:', error)
     return { errorMsg: (error as Error).message }
   }
   
-  revalidatePath('/posts')
-  redirect(`/posts/${id}`)
+  revalidatePath('/', 'layout')
+  redirect(`/posts/view/${category_slug}/${id}`)
 }
 
 export async function deletePosts(postId: number, categorySlug: string) {
@@ -208,13 +207,13 @@ export async function deletePosts(postId: number, categorySlug: string) {
       .eq('id', postId)
 
     if (deleteError) throw deleteError
-
+    
   } catch (error) {
     console.error('Error deleting post:', error)
     return { errorMsg: (error as Error).message }
   }
 
-  revalidatePath('/posts')
+  revalidatePath('/', 'layout')
   redirect(`/posts/lists/${categorySlug}`)
 }
 

@@ -63,7 +63,6 @@ const PostForm: React.FC<PostFormProps> = ({ categorySlug, initialData }) => {
       } else {
         await createPosts(postData);
       }
-      router.push(`/posts/lists/${categorySlug}`);
     } catch (error) {
       console.error('작성/수정 에러:', error);
       // 에러 처리 (예: 사용자에게 에러 메시지 표시)

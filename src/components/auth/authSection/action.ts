@@ -58,7 +58,7 @@ export async function logout() {
 
 export async function signup(prevState: State, formData: FormData): Promise<State> {
   const userType = formData.get("userType") as UserType;
-  const email = formData.get('email') as string;
+const email = formData.get('email') as string;
   const password = formData.get('password') as string;
   const name = formData.get('name') as string;
   const nickname = formData.get('nickname') as string;

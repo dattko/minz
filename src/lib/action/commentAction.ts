@@ -38,7 +38,7 @@ export async function addComment(postId: number, content: string): Promise<void>
     throw new Error(`댓글 추가 실패 : ${response.status}`);
   }
 
-  revalidatePath(`/posts/${postId}`);
+  revalidatePath(`/posts/view/[slug]/${postId}`, 'layout');
 
 }
 
@@ -69,7 +69,7 @@ export async function addReply(postId: number, parentId: number, content: string
     throw new Error(`대댓글 달기 실패: ${response.status}`);
   }
 
-  revalidatePath(`/posts/${postId}`);
+  revalidatePath(`/posts/view/[slug]/${postId}`, 'layout');
 }
 
 export async function editComment(commentId: number, content: string): Promise<void> {
@@ -92,7 +92,7 @@ export async function editComment(commentId: number, content: string): Promise<v
     throw new Error(`댓글 수정 실패: ${response.status}`);
   }
 
-  revalidatePath('/posts/[id]', 'layout');
+  revalidatePath(`/posts/view/[slug]/[id]`, 'layout');
 }
 
 export async function deleteComment(commentId: number): Promise<void> {
@@ -111,5 +111,5 @@ export async function deleteComment(commentId: number): Promise<void> {
     throw new Error(`댓글 삭제 실패: ${response.status}`);
   }
 
-  revalidatePath('/posts/[id]', 'layout');
+  revalidatePath(`/posts/view/[slug]/[id]`, 'layout');
 }

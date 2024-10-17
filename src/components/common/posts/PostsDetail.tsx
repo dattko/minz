@@ -25,6 +25,7 @@ const PostsDetail: React.FC<Posts> = async({
 }) => {
 
   const user = await getUserInfo();
+  
   let isRecommended = false;
   if (user) {
     isRecommended = await checkUserRecommendation(id, user.id);
