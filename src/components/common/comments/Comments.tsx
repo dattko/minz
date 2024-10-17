@@ -12,55 +12,37 @@ import { formatDate } from '@/utils/utils';
 interface CommentsProps {
   postId: number;
   userInfo: any;
+  initialComments: Comment[];
 }
 
-const Comments: React.FC<CommentsProps> = ({ postId, userInfo }) => {
-  const [comments, setComments] = useState<Comment[]>([]);
+const Comments: React.FC<CommentsProps> = ({ postId, userInfo, initialComments }) => {
+  const [comments, setComments] = useState<Comment[]>(initialComments);
   const [newComment, setNewComment] = useState('');
   const [newReply, setNewReply] = useState('');
   const [replyingTo, setReplyingTo] = useState<number | null>(null);
   const [editingComment, setEditingComment] = useState<number | null>(null);
-  const [user, setUser] = useState<any>(userInfo);
+  const user = userInfo;
   const mainComments = comments.filter(comment => comment.parent_id === null);
 
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const [fetchedComments] = await Promise.all([
-        fetchComments(postId)
-      ]);
-      setComments(fetchedComments);
-    };
-    fetchData();
-  }, [postId]);
-
-
-  
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newComment.trim() === '') return;
 
-    // if(window.confirm('댓글을 작성하시겠습니까?')){
     await addComment(postId, newComment);
     setNewComment('');
     const updatedComments = await fetchComments(postId);
     setComments(updatedComments);
-    // }
   };
 
   const handleReplySubmit = async (e: React.FormEvent, parentId: number) => {
     e.preventDefault();
-
     if (newReply.trim() === '') return;
 
-    // if(window.confirm('대댓글을 작성하시겠습니까?')){
-      await addReply(postId, parentId, newReply);
-      setNewReply('');
-      setReplyingTo(null);
-      const updatedComments = await fetchComments(postId);
-      setComments(updatedComments);
-    // }
+    await addReply(postId, parentId, newReply);
+    setNewReply('');
+    setReplyingTo(null);
+    const updatedComments = await fetchComments(postId);
+    setComments(updatedComments);
   };
 
   const handleCommentEdit = async (commentId: number, newContent: string) => {
@@ -74,11 +56,13 @@ const Comments: React.FC<CommentsProps> = ({ postId, userInfo }) => {
 
   const handleCommentDelete = async (commentId: number) => {
     if(window.confirm('정말로 이 댓글을 삭제하시겠습니까?')){
-        await deleteComment(commentId);
-        const updatedComments = await fetchComments(postId);
-        setComments(updatedComments);
+      await deleteComment(commentId);
+      const updatedComments = await fetchComments(postId);
+      setComments(updatedComments);
     }
   };
+
+
 
 
   const playceholder = user ? '댓글을 입력해 주세요.' : '로그인 후 댓글을 작성할 수 있습니다.';
