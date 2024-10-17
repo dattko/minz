@@ -69,7 +69,7 @@ export async function signup(prevState: State, formData: FormData): Promise<Stat
     const { data: existingUsers, error: nicknameCheckError } = await supabase
       .from('userinfo')  // 'profiles' 테이블을 사용합니다. 실제 테이블 이름에 맞게 수정해주세요.
       .select('id')
-      .eq('nickname', nickname)
+      .ilike('nickname', nickname)
       .limit(1);
 
     if (nicknameCheckError) {
