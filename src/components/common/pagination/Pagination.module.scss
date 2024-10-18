@@ -1,0 +1,38 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+  ul {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+  }
+
+  li {
+    margin: 0 5px;
+  }
+
+  button, span {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+
+  .active button {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+  }
+
+  span {
+    cursor: default;
+  }
+}

@@ -6,6 +6,7 @@ import { Eye, Heart } from 'lucide-react';
 import { ListItem } from '@/types/dataType';
 import { fetchSupabaseData } from '@/lib/supabase/api';
 import { formatDate } from '@/utils/utils';
+import { getUserInfo } from '@/components/auth/authSection/action';
 
 interface ListProps {
   categorySlug: string;
@@ -15,7 +16,7 @@ interface ListProps {
 }
 
 async function getPostsByCategory(categorySlug: string, limit: number): Promise<ListItem[]> {
-  let query = `posts?select=*,categories(name)`; // 카테고리 이름 포함
+  let query = `posts?select=*,categories(name)`;
   
   switch (categorySlug) {
     case 'recent':
@@ -24,6 +25,14 @@ async function getPostsByCategory(categorySlug: string, limit: number): Promise<
     case 'popular':
       const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
       query += `&created_at=gte.${oneWeekAgo}&order=views.desc,created_at.desc`;
+      break;
+    case 'myposts':
+      const user = await getUserInfo();
+      if (user) {
+        query += `&author=eq.${user.nickname}&order=created_at.desc`;
+      } else {
+        return []; // 로그인하지 않은 경우 빈 배열 반환
+      }
       break;
     default:
       query += `&category_slug=eq.${categorySlug}&order=created_at.desc`;
@@ -41,7 +50,6 @@ async function getPostsByCategory(categorySlug: string, limit: number): Promise<
     console.error('Error fetching posts:', error);
     return [];
   }
-
 }
 
 const List: React.FC<ListProps> = async ({ categorySlug, showViews = false, limit = 30, simple }) => {

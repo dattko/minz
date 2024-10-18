@@ -3,10 +3,9 @@ import { createClient } from '@/lib/supabase/supabaseServer'
 import { v4 as uuidv4 } from 'uuid'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { EditPost, Posts } from '@/types/dataType'
+import { EditPost, Posts, ListItem } from '@/types/dataType'
 import { getUserInfo } from '@/components/auth/authSection/action'
 import { fetchSupabaseData } from '../supabase/api'
-import { NextApiRequest, NextApiResponse } from 'next';
 
 function extractImageUrls(content: string): string[] {
   const regex = /<img[^>]+src="?([^"\s]+)"?\s*/gi;
@@ -349,5 +348,66 @@ export async function getPostDetail(slug: string, id: number): Promise<Posts | n
   } catch (error) {
     console.error('Error fetching post detail:', error);
     throw error; // 에러를 상위로 전파합니다
+  }
+}
+
+
+export async function getUserPosts(nickname: string, categorySlug?: string) {
+  const supabase = createClient()
+
+  let query = supabase
+    .from('posts')
+    .select('id, title, created_at, category_slug')
+    .eq('author', nickname)
+    .order('created_at', { ascending: false })
+
+  if (categorySlug && categorySlug !== 'popular') {
+    query = query.eq('category_slug', categorySlug)
+  }
+
+  const { data, error } = await query
+
+  if (error) {
+    console.error('Error fetching user posts:', error)
+    return null
+  }
+
+  return data
+}
+
+export async function getPostsByCategory(categorySlug: string, limit: number): Promise<ListItem[]> {
+  let query = `posts?select=*,categories(name)`;
+  
+  switch (categorySlug) {
+    case 'recent':
+      query += `&order=created_at.desc`;
+      break;
+    case 'popular':
+      const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      query += `&created_at=gte.${oneWeekAgo}&order=views.desc,created_at.desc`;
+      break;
+    case 'myposts':
+      const user = await getUserInfo();
+      if (user) {
+        query += `&author=eq.${user.nickname}&order=created_at.desc`;
+      } else {
+        return []; // 로그인하지 않은 경우 빈 배열 반환
+      }
+      break;
+    default:
+      query += `&category_slug=eq.${categorySlug}&order=created_at.desc`;
+  }
+
+  query += `&limit=${limit}`;
+
+  try {
+    const data = await fetchSupabaseData(query);
+    return data.map((post: any) => ({
+      ...post,
+      categoryName: post.categories.name 
+    }));
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    return [];
   }
 }
