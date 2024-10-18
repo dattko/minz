@@ -35,7 +35,12 @@ export const editorExtensions: Extensions = [
   OrderedList,
   Blockquote,
   History,
-  HardBreak,
+  HardBreak.configure({
+    keepMarks: false,
+    HTMLAttributes: {
+      class: 'my-custom-class',
+    },
+  }),
   Text,
   Underline,
   Dropcursor.configure({

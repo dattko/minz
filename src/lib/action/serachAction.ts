@@ -1,34 +1,63 @@
 'use server'
+
 import { ListItem } from '@/types/dataType';
-import { fetchSupabaseData } from '../supabase/api';
+import { createClient } from '../supabase/supabaseServer';
+
 export async function searchPosts(
   query: string,
-  limit: number = 30,
-  page: number = 1
-): Promise<{ posts: ListItem[], total: number }> {
-  const offset = (page - 1) * limit;
-  let searchQuery = `posts?select=*,categories(name)`;
-
-  searchQuery += `&or=(author.ilike.%${query}%,title.ilike.%${query}%,content.ilike.%${query}%)`;
-  searchQuery += `&order=created_at.desc&limit=${limit}&offset=${offset}`;
-
+  limit: number = 10
+): Promise<{ 
+  titleResults: ListItem[], 
+  contentResults: ListItem[], 
+  authorResults: ListItem[], 
+  total: number 
+}> {
+  const supabase = createClient();
   try {
-    const [data, totalCountResult] = await Promise.all([
-      fetchSupabaseData(searchQuery),
-      fetchSupabaseData(`posts?select=count&or=(author.ilike.%${query}%,title.ilike.%${query}%,content.ilike.%${query}%)`)
+    console.log('Searching posts with query:', query);
+
+    const [titleResults, contentResults, authorResults] = await Promise.all([
+      // 제목 검색
+      supabase
+        .from('posts')
+        .select(`*, categories(name)`)
+        .ilike('title', `%${query}%`)
+        .order('created_at', { ascending: false })
+        .limit(limit),
+
+      // 내용 검색
+      supabase
+        .from('posts')
+        .select(`*, categories(name)`)
+        .ilike('content', `%${query}%`)
+        .order('created_at', { ascending: false })
+        .limit(limit),
+
+      // 작성자 검색
+      supabase
+        .from('posts')
+        .select(`*, categories(name)`)
+        .ilike('author', `%${query}%`)
+        .order('created_at', { ascending: false })
+        .limit(limit)
     ]);
 
-    const totalCount = totalCountResult[0]?.count || 0;
+    if (titleResults.error) throw titleResults.error;
+    if (contentResults.error) throw contentResults.error;
+    if (authorResults.error) throw authorResults.error;
+
+    const total = (titleResults.data?.length || 0) + 
+                  (contentResults.data?.length || 0) + 
+                  (authorResults.data?.length || 0);
 
     return {
-      posts: data.map((post: any) => ({
-        ...post,
-        categoryName: post.categories?.name 
-      })),
-      total: totalCount
+      titleResults: titleResults.data || [],
+      contentResults: contentResults.data || [],
+      authorResults: authorResults.data || [],
+      total
     };
-  } catch (error) {
-    console.error('Error searching posts:', error);
-    return { posts: [], total: 0 };
+  } catch (error: any) {
+    console.error('Detailed error in searchPosts:', error);
+    throw new Error(`검색 중 오류가 발생했습니다: ${error.message || '알 수 없는 오류'}`);
   }
 }

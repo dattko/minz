@@ -1,4 +1,5 @@
 import { Paragraph } from '@tiptap/extension-paragraph';
+import { mergeAttributes } from '@tiptap/core';
 
 const CustomParagraph = Paragraph.extend({
   addAttributes() {
@@ -14,7 +15,12 @@ const CustomParagraph = Paragraph.extend({
       },
     };
   },
+  renderHTML({ HTMLAttributes }) {
+    return ['p', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 
+      ['span', { 'data-content': 'true' }, 0],
+      ['br',]
+    ];
+  },
 });
-
 
 export default CustomParagraph;

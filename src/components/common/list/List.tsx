@@ -17,6 +17,7 @@ interface ListProps {
   currentPage?: number;
   posts?: ListItem[];
   total?: number;
+  pagenation?: boolean;
 }
 
 const List: React.FC<ListProps> = async ({ 
@@ -26,6 +27,7 @@ const List: React.FC<ListProps> = async ({
   limit = 30, 
   basePath,
   currentPage = 1,
+  pagenation = true,
   posts: propPosts,
   total: propTotal
 }) => {
@@ -85,11 +87,11 @@ const List: React.FC<ListProps> = async ({
             </li> 
           ))}
         </ul>
-        {totalPages > 1 && (
+        {pagenation && totalPages > 1 && (
           <Pagination
             initialPage={currentPage}
             totalPages={totalPages}
-            basePath={basePath || (categorySlug ? `/posts/lists/${categorySlug}` : '')}
+            basePath={basePath || `/posts/lists/${categorySlug}`}
           />
         )}
       </>

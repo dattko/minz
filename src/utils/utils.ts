@@ -15,41 +15,49 @@ export function formatDate(dateString: string, options: DateFormatOptions = {}):
 
   const date = new Date(dateString);
   
-  const formatOptions: Intl.DateTimeFormatOptions = {
-    hour12: false // 24시간 형식 강제
-  };
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  let formattedDate = '';
 
   if (showDate) {
-    formatOptions.dateStyle = dateStyle;
+    switch(dateStyle) {
+      case 'full':
+        formattedDate += `${year}년 ${month}월 ${day}일`;
+        break;
+      case 'long':
+        formattedDate += `${year}년 ${month}월 ${day}일`;
+        break;
+      case 'medium':
+        formattedDate += `${year}. ${month}. ${day}.`;
+        break;
+      case 'short':
+        formattedDate += `${year}.${month}.${day}`;
+        break;
+    }
   }
 
   if (showTime) {
-    formatOptions.timeStyle = timeStyle;
+    if (showDate) formattedDate += ' ';
+    switch(timeStyle) {
+      case 'full':
+      case 'long':
+        formattedDate += `${hours}시 ${minutes}분 ${seconds}초`;
+        break;
+      case 'medium':
+        formattedDate += `${hours}:${minutes}:${seconds}`;
+        break;
+      case 'short':
+        formattedDate += `${hours}:${minutes}`;
+        break;
+    }
   }
 
-  // // 날짜만 표시하거나 시간만 표시할 경우
-  // if (!showDate || !showTime) {
-  //   delete formatOptions.dateStyle;
-  //   delete formatOptions.timeStyle;
-
-  //   if (showDate) {
-  //     formatOptions.year = 'numeric';
-  //     formatOptions.month = 'long';
-  //     formatOptions.day = 'numeric';
-  //   }
-
-  //   if (showTime) {
-  //     formatOptions.hour = '2-digit';
-  //     formatOptions.minute = '2-digit';
-  //   }
-  // }
-
-  let formattedDate = date.toLocaleString('ko-KR', formatOptions);
-  // 마지막에 오는 점을 제거
-  formattedDate = formattedDate.replace(/\.$/, '');
-
   return formattedDate;
-
 }
 
 // 모든 이벤트 타입을 포함하는 유니온 타입

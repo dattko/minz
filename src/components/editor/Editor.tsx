@@ -51,6 +51,7 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(({ onReady, initialContent }, 
     }
   }));
 
+  
   return (
     <div className={styles.editor}>
       <EditorToolbar editor={editor} onImageUpload={handleImageUpload}/>

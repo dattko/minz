@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './Text.module.scss';
-import { Eclipse } from 'lucide-react';
 
 type FontSize = 'xs' | 'sm' | 'm' | 'lg' | 'xl';
 

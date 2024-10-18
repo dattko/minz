@@ -1,39 +1,74 @@
+// app/search/page.tsx
+
 import React from 'react';
 import { ContentWrap, Content } from '@/components/common/content';
 import List from '@/components/common/list/List';
 import { searchPosts } from '@/lib/action/serachAction';
+import Text from '@/components/text/Text';
+import ContentPreview from './ContentPreview';
 
 interface SearchPageProps {
-  searchParams: { q: string; page?: string };
+  searchParams: { q: string };
 }
 
 const SearchPage: React.FC<SearchPageProps> = async ({ searchParams }) => {
-  const { q, page = '1' } = searchParams;
-  const currentPage = parseInt(page, 10);
+  const { q } = searchParams;
 
   try {
-    const { posts, total } = await searchPosts(q, 30, currentPage);
+    const { titleResults, contentResults, authorResults, total } = await searchPosts(q);
+    if (total === 0) {
+      return (
+        <ContentWrap>
+          <Content title={`'${q}' 검색 결과`}>
+            <div>검색 결과가 없습니다.</div>
+          </Content>
+        </ContentWrap>
+      );
+    }
 
     return (
       <ContentWrap>
-        <Content title={`'${q}' 검색 결과`}>
-          <List 
-            posts={posts}
-            total={total}
-            showViews={true}
-            currentPage={currentPage}
-            basePath={`/search?q=${encodeURIComponent(q)}`}
-            limit={30}
-          />
-        </Content>
+        <Text variant='h2' color='search'>{`'${q}' 검색 결과`}</Text>
+        {titleResults.length > 0 && (
+          <Content title={`제목 (${titleResults.length}건)`}>
+            <List 
+              posts={titleResults}
+              total={titleResults.length}
+              showViews={true}
+              currentPage={1}
+              basePath={`/search?q=${encodeURIComponent(q)}`}
+            />
+          </Content>
+        )}
+        {contentResults.length > 0 && (
+          <Content title={`내용 (${contentResults.length}건)`}>
+            <ContentPreview 
+              posts={contentResults}
+              searchQuery={q}
+              maxLength={200}
+            />
+          </Content>
+        )}
+        {authorResults.length > 0 && (
+          <Content title={`작성자 (${authorResults.length}건)`}>
+            <List 
+              posts={authorResults}
+              total={authorResults.length}
+              showViews={true}
+              currentPage={1}
+              basePath={`/search?q=${encodeURIComponent(q)}`}
+            />
+          </Content>
+        )}
       </ContentWrap>
     );
-  } catch (error) {
-    console.error('Error in SearchPage:', error);
+  } catch (error: any) {
+    console.error('Detailed error in SearchPage:', error);
     return (
       <ContentWrap>
         <Content title="검색 오류">
-          <div>검색 결과를 불러오는 중 오류가 발생했습니다.</div>
+          <div>검색 중 오류가 발생했습니다: {error.message}</div>
+          <div>잠시 후 다시 시도해주세요.</div>
         </Content>
       </ContentWrap>
     );
