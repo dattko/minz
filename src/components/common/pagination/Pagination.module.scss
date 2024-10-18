@@ -2,37 +2,34 @@
   display: flex;
   justify-content: center;
   margin-top: 20px;
-
-  ul {
+  &__btn{
+    border: 1px solid $colorGray;
+    border-radius: 4px;
+    overflow: hidden;
     display: flex;
-    list-style-type: none;
-    padding: 0;
-  }
-
-  li {
-    margin: 0 5px;
-  }
-
-  button, span {
-    padding: 5px 10px;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background-color: #f0f0f0;
+    button {
+      width: 24px;
+      height: 24px;
+      font-size: 12px;
+      padding: 0;
+      background-color: $colorWhite;
+      color: $colorBlack;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-right: 1px solid $colorGray;
+      &:last-child{
+        border-right: none;
+      }
+      &:hover {
+        background-color: rgba($color: $colorPrimary, $alpha: .2);
+      }
+      &.active {
+        background-color: $colorPrimary;
+        color: $colorWhite;
+        border-color: $colorPrimary;
+      }
     }
   }
 
-  .active button {
-    background-color: #007bff;
-    color: #fff;
-    border-color: #007bff;
-  }
 
-  span {
-    cursor: default;
-  }
 }

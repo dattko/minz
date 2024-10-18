@@ -3,96 +3,77 @@ import Link from 'next/link';
 import styles from './List.module.scss';
 import Text from '@/components/text/Text';
 import { Eye, Heart } from 'lucide-react';
-import { ListItem } from '@/types/dataType';
-import { fetchSupabaseData } from '@/lib/supabase/api';
 import { formatDate } from '@/utils/utils';
-import { getUserInfo } from '@/components/auth/authSection/action';
+import { getPostsByCategory } from '@/lib/action/postsAction';
+import Pagination from '@/components/common/pagination/Pagination';
 
 interface ListProps {
   categorySlug: string;
   showViews?: boolean;
   simple?: boolean;
   limit?: number;
+  basePath?: string;
+  currentPage?: number;  // 현재 페이지를 props로 받습니다.
 }
 
-async function getPostsByCategory(categorySlug: string, limit: number): Promise<ListItem[]> {
-  let query = `posts?select=*,categories(name)`;
-  
-  switch (categorySlug) {
-    case 'recent':
-      query += `&order=created_at.desc`;
-      break;
-    case 'popular':
-      const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-      query += `&created_at=gte.${oneWeekAgo}&order=views.desc,created_at.desc`;
-      break;
-    case 'myposts':
-      const user = await getUserInfo();
-      if (user) {
-        query += `&author=eq.${user.nickname}&order=created_at.desc`;
-      } else {
-        return []; // 로그인하지 않은 경우 빈 배열 반환
-      }
-      break;
-    default:
-      query += `&category_slug=eq.${categorySlug}&order=created_at.desc`;
-  }
+const List: React.FC<ListProps> = async ({ 
+  categorySlug, 
+  showViews = false, 
+  simple = false, 
+  limit = 30, 
+  basePath,
+  currentPage
+}) => {
+  const { posts, total } = await getPostsByCategory(categorySlug, limit, currentPage);
+  const totalPages = Math.ceil(total / limit);
 
-  query += `&limit=${limit}`;
-
-  try {
-    const data = await fetchSupabaseData(query);
-    return data.map((post: any) => ({
-      ...post,
-      categoryName: post.categories.name 
-    }));
-  } catch (error) {
-    console.error('Error fetching posts:', error);
-    return [];
-  }
-}
-
-const List: React.FC<ListProps> = async ({ categorySlug, showViews = false, limit = 30, simple }) => {
-  const posts = await getPostsByCategory(categorySlug, limit);
-  
   return (
-    <ul className={styles.list__ul}>
-      {posts.map((post) => (
-        <li key={post.id} className={styles.list__li}>
-          <div className={styles.list__title}>
-            {(categorySlug === 'recent' || categorySlug === 'popular') && post.categoryName && (
-              <Text variant='p' color='gray' fontSize='xs'>[{post.categoryName}]</Text>
+    <>
+      <ul className={styles.list__ul}>
+        {posts.map((post) => (
+          <li key={post.id} className={styles.list__li}>
+            <div className={styles.list__title}>
+              {(categorySlug === 'recent' || categorySlug === 'popular') && post.categoryName && (
+                <Text variant='p' color='gray' fontSize='xs'>[{post.categoryName}]</Text>
+              )}
+              <Link href={`/posts/view/${post.category_slug}/${post.id}`}>
+                <Text variant='p' ellipsis>{post.title}</Text>
+              </Link>
+              <Text variant='p' color='orange' fontSize='xs'>{post.comment_count}</Text>
+            </div>
+            {!simple && (
+              <div className={styles.list__author}>
+                <Text variant='p' fontSize='xs'>{post.author}</Text>
+              </div>
             )}
-            <Link href={`/posts/view/${post.category_slug}/${post.id}`}>
-              <Text variant='p' ellipsis>{post.title}</Text>
-            </Link>
-            <Text variant='p' color='orange' fontSize='xs'>{post.comment_count}</Text>
-          </div>
-          {!simple && (
-            <div className={styles.list__author}>
-              <Text variant='p' fontSize='xs'>{post.author}</Text>
+            {(showViews || !simple) && (
+              <div className={styles.list__views}>
+                <Eye size={12} color='gray'/>
+                <Text variant='p' fontSize='xs' color='gray'>{post.unique_views}</Text>
+              </div>
+            )}
+            {!simple && (
+              <div className={styles.list__views}>
+                <Heart size={12} color='gray'/>
+                <Text variant='p' fontSize='xs' color='gray'>{post.recommendations}</Text>
+              </div>
+            )}
+            <div className={styles.list__info}>
+              <Text variant='p' color='gray' fontSize='xs'>
+                {simple ? formatDate(post.created_at, { showTime: false, dateStyle: 'short' }) : formatDate(post.created_at,{dateStyle: 'short', timeStyle: 'short'})}
+              </Text>
             </div>
-          )}
-          {(showViews || !simple) && (
-            <div className={styles.list__views}>
-              <Eye size={12} color='gray'/>
-              <Text variant='p' fontSize='xs' color='gray'>{post.unique_views}</Text>
-            </div>
-          )}
-          {!simple && (
-            <div className={styles.list__views}>
-              <Heart size={12} color='gray'/>
-              <Text variant='p' fontSize='xs' color='gray'>{post.recommendations}</Text>
-            </div>
-          )}
-          <div className={styles.list__info}>
-            <Text variant='p' color='gray' fontSize='xs'>
-              {simple ? formatDate(post.created_at, { showTime: false, dateStyle: 'short' }) : formatDate(post.created_at,{dateStyle: 'short', timeStyle: 'short'})}
-            </Text>
-          </div>
-        </li> 
-      ))}
-    </ul>
+          </li> 
+        ))}
+      </ul>
+      {currentPage && totalPages > 1 && (
+        <Pagination
+          initialPage={currentPage}
+          totalPages={totalPages}
+          basePath={basePath || `/posts/lists/${categorySlug}`}
+        />
+      )}
+    </>
   );
 };
 

@@ -375,8 +375,10 @@ export async function getUserPosts(nickname: string, categorySlug?: string) {
   return data
 }
 
-export async function getPostsByCategory(categorySlug: string, limit: number): Promise<ListItem[]> {
+export async function getPostsByCategory(categorySlug: string, limit: number = 30, page: number = 1): Promise<{ posts: ListItem[], total: number }> {
+  const offset = (page - 1) * limit;
   let query = `posts?select=*,categories(name)`;
+  let countQuery = `posts?select=count`;
   
   switch (categorySlug) {
     case 'recent':
@@ -385,29 +387,50 @@ export async function getPostsByCategory(categorySlug: string, limit: number): P
     case 'popular':
       const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
       query += `&created_at=gte.${oneWeekAgo}&order=views.desc,created_at.desc`;
+      query += `&limit=${limit}`; // 인기글은 30개만 표시
+      countQuery += `&created_at=gte.${oneWeekAgo}`;
       break;
     case 'myposts':
       const user = await getUserInfo();
       if (user) {
         query += `&author=eq.${user.nickname}&order=created_at.desc`;
+        countQuery += `&author=eq.${user.nickname}`;
       } else {
-        return []; // 로그인하지 않은 경우 빈 배열 반환
+        return { posts: [], total: 0 };
       }
       break;
     default:
       query += `&category_slug=eq.${categorySlug}&order=created_at.desc`;
+      countQuery += `&category_slug=eq.${categorySlug}`;
   }
 
-  query += `&limit=${limit}`;
+  if (categorySlug !== 'popular') {
+    query += `&limit=${limit}&offset=${offset}`;
+  }
 
   try {
-    const data = await fetchSupabaseData(query);
-    return data.map((post: any) => ({
-      ...post,
-      categoryName: post.categories.name 
-    }));
+    const [data, totalCountResult] = await Promise.all([
+      fetchSupabaseData(query),
+      fetchSupabaseData(countQuery)
+    ]);
+
+    let totalCount = totalCountResult[0]?.count || 0;
+    
+    // For popular category, always set total to 30 or less
+    if (categorySlug === 'popular') {
+      totalCount = Math.min(totalCount, 30);
+    }
+
+    return {
+      posts: data.map((post: any) => ({
+        ...post,
+        categoryName: post.categories?.name 
+      })),
+      total: totalCount
+    };
   } catch (error) {
     console.error('Error fetching posts:', error);
-    return [];
+    return { posts: [], total: 0 };
   }
 }
+

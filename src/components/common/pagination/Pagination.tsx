@@ -1,74 +1,96 @@
-import React from 'react';
-import Link from 'next/link';
-import styles from './List.module.scss';
-import Text from '@/components/text/Text';
-import { Eye, Heart } from 'lucide-react';
-import { ListItem } from '@/types/dataType';
-import { formatDate } from '@/utils/utils';
-import Pagination from '@/components/common/pagination/Pagination';
+'use client';
 
-interface ListProps {
-  posts: ListItem[];
-  categorySlug: string;
-  showViews: boolean;
-  currentPage: number;
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import styles from './Pagination.module.scss';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+
+interface PaginationProps {
+  initialPage: number;
   totalPages: number;
+  basePath: string;
 }
 
-const List: React.FC<ListProps> = ({ 
-  posts, 
-  categorySlug, 
-  showViews, 
-  currentPage,
-  totalPages
-}) => {
+const Pagination: React.FC<PaginationProps> = ({ initialPage, totalPages, basePath }) => {
+  const router = useRouter();
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      router.push(`${basePath}?page=${newPage}`);
+    }
+  };
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const startPage = Math.max(1, initialPage - 5);
+    const endPage = Math.min(totalPages, startPage + 9);
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(
+        <button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          className={i === initialPage ? styles.active : ''}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    return pageNumbers;
+  };
+
   return (
-    <>
-      <ul className={styles.list__ul}>
-        {posts.map((post) => (
-          <li key={post.id} className={styles.list__li}>
-            <div className={styles.list__title}>
-              {(categorySlug === 'recent' || categorySlug === 'popular') && post.categoryName && (
-                <Text variant='p' color='gray' fontSize='xs'>[{post.categoryName}]</Text>
-              )}
-              <Link href={`/posts/view/${post.category_slug}/${post.id}`}>
-                <Text variant='p' ellipsis>{post.title}</Text>
-              </Link>
-              <Text variant='p' color='orange' fontSize='xs'>{post.comment_count}</Text>
-            </div>
-            <div className={styles.list__author}>
-              <Text variant='p' fontSize='xs'>{post.author}</Text>
-            </div>
-            {showViews && (
-              <div className={styles.list__views}>
-                <Eye size={12} color='gray'/>
-                <Text variant='p' fontSize='xs' color='gray'>{post.unique_views}</Text>
-              </div>
-            )}
-            <div className={styles.list__views}>
-              <Heart size={12} color='gray'/>
-              <Text variant='p' fontSize='xs' color='gray'>{post.recommendations}</Text>
-            </div>
-            <div className={styles.list__info}>
-              <Text variant='p' color='gray' fontSize='xs'>
-                {formatDate(post.created_at, {dateStyle: 'short', timeStyle: 'short'})}
-              </Text>
-            </div>
-          </li> 
-        ))}
-      </ul>
-      {totalPages > 1 && (
-        <Pagination 
-          currentPage={currentPage} 
-          totalPages={totalPages} 
-          onPageChange={(newPage) => {
-            // 여기서는 새 URL을 생성합니다.
-            return `?page=${newPage}`;
-          }} 
-        />
-      )}
-    </>
+    <div className={styles.pagination}>
+      <div className={styles.pagination__btn}>
+        {totalPages > 10 && (
+          <>
+            <button
+              onClick={() => handlePageChange(1)}
+              disabled={initialPage === 1}
+            >
+              <ChevronsLeft size={16} />
+            </button>
+            <button
+              onClick={() => handlePageChange(Math.max(1, initialPage - 10))}
+              disabled={initialPage <= 10}
+            >
+              <ChevronLeft size={16} />
+            </button>
+          </>
+        )}
+        <button
+          onClick={() => handlePageChange(initialPage - 1)}
+          disabled={initialPage === 1}
+        >
+          <ChevronLeft size={16} />
+        </button>
+        {renderPageNumbers()}
+        <button
+          onClick={() => handlePageChange(initialPage + 1)}
+          disabled={initialPage === totalPages}
+        >
+          <ChevronRight size={16} />
+        </button>
+        {totalPages > 10 && (
+          <>
+            <button
+              onClick={() => handlePageChange(Math.min(totalPages, initialPage + 10))}
+              disabled={initialPage > totalPages - 10}
+            >
+              <ChevronRight size={16} />
+            </button>
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              disabled={initialPage === totalPages}
+            >
+              <ChevronsRight size={16} />
+            </button>
+          </>
+        )}
+      </div>
+    </div>
   );
 };
 
-export default List;
+export default Pagination;
