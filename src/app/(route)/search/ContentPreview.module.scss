@@ -24,12 +24,14 @@
     display: flex;
     align-items: center;
     gap: 8px;
-
-    a {
-      flex: 1;
-      min-width: 0;
-      &:hover {
-        p {
+    display: flex;
+    min-width: 0;
+    white-space: nowrap;
+    a{
+      display: inline-block;
+      max-width: 65%;
+      &:hover{
+        p{
           color: $colorPrimary;
         }
       }
@@ -66,9 +68,15 @@
 
   &__views {
     min-width: 50px;
+    @include responsive(768px){
+      display: none !important;
+    }
   }
 
   &__date {
     margin-left: auto;
+    @include responsive(768px){
+      display: none !important;
+    }
   }
 }
