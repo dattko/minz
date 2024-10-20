@@ -9,7 +9,7 @@ export default function Home() {
       <Content title='공지사항' link="/posts/lists/notice" className='notice' >
         <List categorySlug="notice" simple limit={15} pagenation={false}/>
       </Content>
-      <Content title='오늘의 베스트' className='popular' link="/posts/lists/popular">
+      <Content title='주간 베스트' className='popular' link="/posts/lists/popular">
         <List categorySlug="popular" showViews simple limit={15} pagenation={false}/>
       </Content>
       <Content title='최신 글'>

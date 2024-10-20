@@ -1,6 +1,16 @@
 .header{
   height: 80px;
   padding: $containerPadding;
+  @include responsive($breakpointMedium){
+    border-bottom: 1px solid $colorGray;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    background-color: #fff;
+    height: 64px;
+  }
   &__wrap{
     width: 100%;
     max-width: $containerWidth;
@@ -48,13 +58,39 @@
       color: $colorWhite;
     }
   }
-
+  &__nav__btn{
+    display: none;
+    color: $colorGrayDark;
+    &:hover{
+      color: $colorPrimary;
+    }
+    @include responsive($breakpointMedium){
+      display: block;
+    }
+  }
 }
 
 .nav{
   padding: $containerPadding;
   background-color: $colorPrimary;
   height: 42px;
+  @include responsive($breakpointMedium){
+    position: fixed;
+    right: 0;
+    top: 70px;
+    z-index: 2;
+    height: auto;
+    padding: 0;
+    width: 230px;
+    background-color: #fff;
+    border: 1px solid $colorGray;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0,0,0,.1);
+    display: none;
+    &.active{
+      display: block;
+    }
+  }
   &__wrap{
     max-width: $containerWidth;
     margin: 0 auto;
@@ -64,11 +100,20 @@
     display: flex;
     align-items: center;
     height: 100%;
+    @include responsive($breakpointMedium){
+      padding: 12px 0;
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
   &__li{
     display: flex;
     align-items: center;
     height: 100%;
+
+    @include responsive($breakpointMedium){
+      width: 100%;
+    }
     &::after{
       content: '';
       display: block;
@@ -76,6 +121,9 @@
       height: 12px;
       background-color: $colorGray;
       margin: 0 12px;
+      @include responsive($breakpointMedium){
+        display: none;
+      }
     }
 
     &:last-child{
@@ -88,10 +136,37 @@
       display: flex;
       align-items: center;
       p{
-        &:hover{
+        color: $colorWhite;
+      }
+      &:hover{
+        p{
           color: $colorGray;
         }
       }
+      @include responsive($breakpointMedium){
+        width: 100%;
+        padding: 8px 12px;
+
+        p{
+          color: $colorBlack;
+        }
+        &:hover{
+          p{
+            color: $colorPrimary;
+          }
+        }
+      }
+
+    }
+
+  }
+  &__login{
+    display: none;
+    padding: 12px;
+    border-bottom: 1px solid $colorGray;
+    @include responsive($breakpointMedium){
+      display: block;
+      margin-left: auto;
     }
   }
 }

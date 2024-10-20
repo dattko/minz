@@ -20,7 +20,10 @@ export async function searchPosts(
       // 제목 검색
       supabase
         .from('posts')
-        .select(`*, categories(name)`)
+        .select(`
+          *,
+          categories(name, slug)
+        `)
         .ilike('title', `%${query}%`)
         .order('created_at', { ascending: false })
         .limit(limit),
@@ -28,7 +31,10 @@ export async function searchPosts(
       // 내용 검색
       supabase
         .from('posts')
-        .select(`*, categories(name)`)
+        .select(`
+          *,
+          categories(name, slug)
+        `)
         .ilike('content', `%${query}%`)
         .order('created_at', { ascending: false })
         .limit(limit),
@@ -36,7 +42,10 @@ export async function searchPosts(
       // 작성자 검색
       supabase
         .from('posts')
-        .select(`*, categories(name)`)
+        .select(`
+          *,
+          categories(name, slug)
+        `)
         .ilike('author', `%${query}%`)
         .order('created_at', { ascending: false })
         .limit(limit)
@@ -50,10 +59,19 @@ export async function searchPosts(
                   (contentResults.data?.length || 0) + 
                   (authorResults.data?.length || 0);
 
+    // 결과 데이터 형식 변환
+    const formatResults = (results: any[]): ListItem[] => {
+      return results.map(post => ({
+        ...post,
+        categoryName: post.categories?.name || '',
+        category_slug: post.categories?.slug || '',
+      }));
+    };
+
     return {
-      titleResults: titleResults.data || [],
-      contentResults: contentResults.data || [],
-      authorResults: authorResults.data || [],
+      titleResults: formatResults(titleResults.data || []),
+      contentResults: formatResults(contentResults.data || []),
+      authorResults: formatResults(authorResults.data || []),
       total
     };
   } catch (error: any) {

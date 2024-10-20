@@ -11,6 +11,9 @@
       &.col-#{$i} {
         > div {
           max-width: calc((100% - #{($i - 1) * $contentGap}) / #{$i});
+          @include responsive(768px){
+            max-width: 100%;
+          }
         }
       }
     }

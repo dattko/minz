@@ -1,5 +1,3 @@
-// app/search/page.tsx
-
 import React from 'react';
 import { ContentWrap, Content } from '@/components/common/content';
 import List from '@/components/common/list/List';

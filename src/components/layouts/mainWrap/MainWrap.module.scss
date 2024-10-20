@@ -4,8 +4,15 @@
   padding: 50px 0;
   display: flex;
   gap: 20px;
+  @include responsive($breakpointMedium){
+    flex-direction: column-reverse;
+  }
   &__wrap{
     min-width: 1080px;
+    @include responsive($breakpointMedium){
+      min-width: 100%;
+      margin-top: 64px;
+    }
   }
   &__container{
     padding: $containerPadding;
@@ -28,13 +35,17 @@
     top: 30px;
     left: 0;
     border: 1px solid $colorGray;
+    background-color: #fff;
     border-radius: 4px;
+    @include responsive($breakpointMedium){
+      display: none;
+    }
     >div{
       padding: $contentGap;
 
-      &:not(:first-child){
-        border-top: 1px solid $colorGray;
-      }
+      // &:not(:first-child){
+      //   border-top: 1px solid $colorGray;
+      // }
     }
   }
 }

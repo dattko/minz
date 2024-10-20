@@ -54,9 +54,7 @@ const List: React.FC<ListProps> = async ({
           {posts.map((post) => (
             <li key={post.id} className={styles.list__li}>
               <div className={styles.list__title}>
-                {(categorySlug === 'recent' || categorySlug === 'popular') && post.categoryName && (
-                  <Text variant='p' color='gray' fontSize='xs'>[{post.categoryName}]</Text>
-                )}
+                <Text variant='p' color='gray' fontSize='xs'>[{post.categoryName}]</Text>
                 <Link href={`/posts/view/${post.category_slug}/${post.id}`}>
                   <Text variant='p' ellipsis>{post.title}</Text>
                 </Link>

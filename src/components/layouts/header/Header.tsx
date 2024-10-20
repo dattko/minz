@@ -1,4 +1,3 @@
-// Header.tsx
 import Link from 'next/link';
 import styles from './Header.module.scss';
 import HeaderSearch from './HeaderSerach';
@@ -6,6 +5,8 @@ import Text from '@/components/text/Text';
 import { supabaseUrl, supabaseKey } from '@/lib/supabase/supabase';
 import { MenuItem } from '@/types/dataType';
 import { notFound } from 'next/navigation';
+import { Menu } from 'lucide-react';
+import AuthSection from '@/components/auth/authSection/AuthSection';
 
 const Header = async () => {
   const menuItems = await fetchMenuItems();
@@ -17,15 +18,21 @@ const Header = async () => {
             <Link href="/">Minz</Link>
           </div>
           <HeaderSearch />
+          <button className={styles.header__nav__btn}>
+            <Menu size={24} />
+          </button>
         </div>
       </header>
       <nav className={styles.nav}>
         <div className={styles.nav__wrap}>
+          <div className={styles.nav__login}>
+            <AuthSection />
+          </div>
           <ul className={styles.nav__ul}>
             {menuItems.map((item: MenuItem) => (
               <li key={item.id} className={styles.nav__li}>
                 <Link href={getItemLink(item)}>
-                  <Text variant='p' color='white'>{item.title}</Text>
+                  <Text variant='p'>{item.title}</Text>
                 </Link>
               </li>
             ))}

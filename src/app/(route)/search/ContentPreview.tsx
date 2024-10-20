@@ -13,21 +13,34 @@ interface ContentPreviewProps {
 }
 
 const ContentPreview: React.FC<ContentPreviewProps> = ({ posts, searchQuery, maxLength = 100 }) => {
+  // 검색어를 포함한 텍스트에 <mark> 태그를 적용하여 JSX로 반환하는 함수
   const highlightSearchQuery = (text: string, query: string) => {
-    const regex = new RegExp(`(${query})`, 'gi');
-    return text.replace(regex, '<mark>$1</mark>');
+    if (!query) return text;
+
+    const parts = text.split(new RegExp(`(${query})`, 'gi')); // 검색어로 텍스트 분할
+    return parts.map((part, index) =>
+      part.toLowerCase() === query.toLowerCase() ? (
+        <mark key={index}>{part}</mark>
+      ) : (
+        part
+      )
+    );
   };
 
-  const getPreview = (content: string) => {
-    const contentWithoutImages = content.replace(/<img[^>]*>/g, '');
+  const removeHtmlTags = (html: string) => {
+    return html.replace(/<\/?[^>]+(>|$)/g, ""); // 모든 HTML 태그를 제거
+  };
   
-    let preview = contentWithoutImages.substring(0, maxLength);
-    if (contentWithoutImages.length > maxLength) {
+  const getPreview = (content: string) => {
+    const contentWithoutImages = content.replace(/<img[^>]*>/g, ''); // 이미지 태그 제거
+    const cleanContent = removeHtmlTags(contentWithoutImages); // HTML 태그 제거
+  
+    let preview = cleanContent.substring(0, maxLength);
+    if (cleanContent.length > maxLength) {
       preview += '...';
     }
     return highlightSearchQuery(preview, searchQuery);
   };
-  
 
   return (
     <ul className={styles.preview__ul}>
@@ -48,22 +61,22 @@ const ContentPreview: React.FC<ContentPreviewProps> = ({ posts, searchQuery, max
                 <Text variant='p' fontSize='xs'>{post.author}</Text>
               </div>
               <div className={styles.preview__views}>
-                <Eye size={12} color='gray'/>
+                <Eye size={12} color='gray' />
                 <Text variant='p' fontSize='xs' color='gray'>{post.unique_views}</Text>
               </div>
               <div className={styles.preview__views}>
-                <Heart size={12} color='gray'/>
+                <Heart size={12} color='gray' />
                 <Text variant='p' fontSize='xs' color='gray'>{post.recommendations}</Text>
               </div>
               <div className={styles.preview__date}>
                 <Text variant='p' color='gray' fontSize='xs'>
-                  {formatDate(post.created_at, {dateStyle: 'short', timeStyle: 'short'})}
+                  {formatDate(post.created_at, { dateStyle: 'short', timeStyle: 'short' })}
                 </Text>
               </div>
             </div>
           </div>
           <div className={styles.preview__content}>
-            <span dangerouslySetInnerHTML={{ __html: getPreview(post.content) }} />
+            <Text variant='p'>{getPreview(post.content)}</Text>
           </div>
         </li>
       ))}
