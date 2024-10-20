@@ -61,6 +61,8 @@
   &__nav__btn{
     display: none;
     color: $colorGrayDark;
+    padding: 0;
+    min-width: 20px;
     &:hover{
       color: $colorPrimary;
     }

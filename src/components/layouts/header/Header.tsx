@@ -19,7 +19,7 @@ const Header = async () => {
           </div>
           <HeaderSearch />
           <button className={styles.header__nav__btn}>
-            <Menu size={24} />
+            <Menu  size={20}/>
           </button>
         </div>
       </header>
