@@ -1,12 +1,12 @@
 'use client'
-import React from 'react';
+import React, {useEffect} from 'react';
 import styles from './Header.module.scss';
-import AuthSection from '@/components/auth/authSection/AuthSection';
 import Text from '@/components/text/Text';
 import Link from 'next/link';
 import { MenuItem } from '@/types/dataType';
 import { notFound } from 'next/navigation';
-import { useHeader } from '@/contexts/header/HeaderContext';
+import { useHeaderStore } from './headerStore';
+import { usePathname } from 'next/navigation';
 
 
 interface navProps {
@@ -15,7 +15,13 @@ interface navProps {
 }
   
 const nav: React.FC<navProps> = ({ menuItems, children }) => {
-  const { isNavActive } = useHeader()
+  const isNavActive = useHeaderStore(state => state.isNavActive);
+  const resetNav = useHeaderStore(state => state.resetNav)
+  const pathname = usePathname();
+
+  useEffect(() => {
+    resetNav();
+  }, [pathname, resetNav]);
 
   const getItemLink = (item: MenuItem): string => {
     switch (item.type) {

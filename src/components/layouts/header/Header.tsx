@@ -5,7 +5,6 @@ import { supabaseUrl, supabaseKey } from '@/lib/supabase/supabase';
 import { MenuItem } from '@/types/dataType';
 import Nav from './Nav';
 import HeaderMenuBtn from './HeaderMenuBtn';
-import { HeaderProvider, useHeader } from '@/contexts/header/HeaderContext';
 import AuthSection from '@/components/auth/authSection/AuthSection';
 
 
@@ -14,7 +13,7 @@ const Header = async () => {
 
 
   return (
-    <HeaderProvider>
+    <>
       <header className={styles.header}>
         <div className={styles.header__wrap}>
           <div className={styles.header__logo}>
@@ -27,7 +26,7 @@ const Header = async () => {
       <Nav menuItems={menuItems} >
         <AuthSection />
       </Nav>
-    </HeaderProvider>
+    </>
   );
 };
 

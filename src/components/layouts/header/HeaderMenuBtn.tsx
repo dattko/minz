@@ -2,10 +2,10 @@
 import React from 'react';
 import styles from './Header.module.scss';
 import { Menu } from 'lucide-react';
-import { useHeader } from '@/contexts/header/HeaderContext';
+import { useHeaderStore } from './headerStore';
 
 const HeaderMenuBtn: React.FC = () => {
-  const { toggleNav } = useHeader();
+  const toggleNav = useHeaderStore((state) => state.toggleNav);
 
   return (
     <button className={styles.header__nav__btn} onClick={toggleNav}>

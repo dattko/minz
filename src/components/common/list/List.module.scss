@@ -31,7 +31,7 @@
     white-space: nowrap;
     a{
       display: inline-block;
-      max-width: 80%;
+      max-width: 65%;
       &:hover{
         p{
           color: $colorPrimary;
@@ -45,5 +45,13 @@
   }
   &__views{
     min-width: 50px;
+    @include responsive(768px){
+      display: none !important;
+    }
+  }
+  &__info{
+    @include responsive(768px){
+      display: none !important;
+    }
   }
 }
