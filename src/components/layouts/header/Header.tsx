@@ -1,45 +1,33 @@
 import Link from 'next/link';
 import styles from './Header.module.scss';
 import HeaderSearch from './HeaderSerach';
-import Text from '@/components/text/Text';
 import { supabaseUrl, supabaseKey } from '@/lib/supabase/supabase';
 import { MenuItem } from '@/types/dataType';
-import { notFound } from 'next/navigation';
-import { Menu } from 'lucide-react';
+import Nav from './Nav';
+import HeaderMenuBtn from './HeaderMenuBtn';
+import { HeaderProvider, useHeader } from '@/contexts/header/HeaderContext';
 import AuthSection from '@/components/auth/authSection/AuthSection';
+
 
 const Header = async () => {
   const menuItems = await fetchMenuItems();
+
+
   return (
-    <>
+    <HeaderProvider>
       <header className={styles.header}>
         <div className={styles.header__wrap}>
           <div className={styles.header__logo}>
             <Link href="/">Minz</Link>
           </div>
           <HeaderSearch />
-          <button className={styles.header__nav__btn}>
-            <Menu  size={20}/>
-          </button>
+          <HeaderMenuBtn/>
         </div>
       </header>
-      <nav className={styles.nav}>
-        <div className={styles.nav__wrap}>
-          <div className={styles.nav__login}>
-            <AuthSection />
-          </div>
-          <ul className={styles.nav__ul}>
-            {menuItems.map((item: MenuItem) => (
-              <li key={item.id} className={styles.nav__li}>
-                <Link href={getItemLink(item)}>
-                  <Text variant='p'>{item.title}</Text>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </nav>
-    </>
+      <Nav menuItems={menuItems} >
+        <AuthSection />
+      </Nav>
+    </HeaderProvider>
   );
 };
 
@@ -62,18 +50,7 @@ const fetchMenuItems = async (): Promise<MenuItem[]> => {
   }
 }
 
-const getItemLink = (item: MenuItem): string => {
-  switch (item.type) {
-    case 'category':
-      return `/posts/lists/${item.category_slug}`;
-    case 'custom':
-      return `/posts/lists/${item.custom_slug}`;
-    case 'external':
-      return item.external_url || notFound();
-    default:
-      return notFound();
-  }
-}
+
 
 export default Header;
 

@@ -4,6 +4,8 @@ import styles from './AuthSection.module.scss';
 import { createClient } from '@/lib/supabase/supabaseServer';
 import Link from 'next/link';
 import Text from '@/components/text/Text';
+
+
 const AuthSection = async () => {
   const supabase = createClient()
 
