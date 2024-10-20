@@ -69,6 +69,9 @@
     @include responsive($breakpointMedium){
       display: block;
     }
+    &.active{
+      color: $colorPrimary;
+    }
   }
 }
 
@@ -78,7 +81,7 @@
   height: 42px;
   @include responsive($breakpointMedium){
     position: fixed;
-    right: 0;
+    right: 6px;
     top: 60px;
     z-index: 2;
     height: auto;
@@ -89,9 +92,7 @@
     border-radius: 4px;
     box-shadow: 0 0 10px rgba(0,0,0,.1);
     display: none;
-    &.active{
-      display: block;
-    }
+
   }
   &__wrap{
     max-width: $containerWidth;
