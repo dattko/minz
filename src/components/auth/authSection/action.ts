@@ -183,3 +183,62 @@ export async function findAccount(name: string) {
     return { success: false, message: '계정 검색 중 오류가 발생했습니다.' };
   }
 }
+
+
+
+export async function updateProfile(userId: string, newNickname: string) {
+  const supabase = createClient();
+  
+  const { data: existingUser, error: checkError } = await supabase
+    .from('userinfo')
+    .select('id')
+    .eq('nickname', newNickname)
+    .neq('id', userId)  // 자기 자신은 제외
+    .single();
+
+  if (checkError && checkError.code !== 'PGRST116') {  
+    console.error('Nickname check error:', checkError);
+    return { success: false, error: '닉네임 확인 중 오류가 발생했습니다.' };
+  }
+
+  if (existingUser) {
+    return { success: false, error: '이미 사용 중인 닉네임입니다.' };
+  }
+
+  // 닉네임 업데이트
+  const { error: updateError } = await supabase
+    .from('userinfo')
+    .update({ nickname: newNickname })
+    .eq('id', userId);
+
+  if (updateError) {
+    console.error('Profile update error:', updateError);
+    return { success: false, error: updateError.message };
+  }
+
+  return { success: true };
+}
+
+export async function changePassword(userId: string, currentPassword: string, newPassword: string) {
+  const supabase = createClient();
+
+  // 현재 비밀번호 확인
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: userId, // 이메일 대신 userId를 사용
+    password: currentPassword,
+  });
+
+  if (signInError) {
+    return { success: false, error: '현재 비밀번호가 올바르지 않습니다.' };
+  }
+
+  // 새 비밀번호로 업데이트
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+
+  if (error) {
+    console.error('Password change error:', error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}

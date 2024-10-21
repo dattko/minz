@@ -14,9 +14,11 @@ const UserProfile: React.FC = async () => {
   return (
     <div className={styles.userProfile}>
       <div className={styles.userInfo}>
-        <Btn size='icon' variant='outline-secondary' className={styles.editProfile}>
-          <Settings/>
-        </Btn>
+        <Link href={'/mypage/settings'}>
+          <Btn size='icon' variant='outline-secondary' className={styles.editProfile}>
+            <Settings/>
+          </Btn>
+        </Link>
         <Text variant='p' className={styles.username}>{user?.nickname}</Text>
         <Text variant='p' className={styles.level}>Lv: {user?.user_level}</Text>
         <Text variant='p' className={styles.points}>포인트: {user?.point}</Text>
