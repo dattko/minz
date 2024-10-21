@@ -137,3 +137,49 @@ export const getUserInfo = async (): Promise<User | null> => {
     return null;
   }
 };
+
+
+export async function resetPassword(email: string) {
+  const supabase = createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password`,
+  });
+
+  if (error) {
+    console.error('Password reset error:', error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}
+
+export async function findAccount(name: string) {
+  const supabase = createClient();
+  
+  try {
+    const { data, error } = await supabase
+      .from('userinfo')
+      .select('email')
+      .ilike('nickname', name)
+
+    if (error) throw error;
+
+    if (data && data.length > 0) {
+      // 모든 일치하는 이메일 주소를 마스킹 처리
+      const maskedEmails = data.map(item => 
+        item.email.replace(/(.{2})(.*)(@.*)/, "$1***$3")
+      );
+      
+      return { 
+        success: true, 
+        message: `${maskedEmails.length}개의 계정을 찾았습니다.`,
+        emails: maskedEmails 
+      };
+    } else {
+      return { success: false, message: '해당 이름으로 등록된 계정을 찾을 수 없습니다.' };
+    }
+  } catch (error) {
+    console.error('Account search error:', error);
+    return { success: false, message: '계정 검색 중 오류가 발생했습니다.' };
+  }
+}

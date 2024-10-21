@@ -1,10 +1,12 @@
 'use client';
-import React, { useState } from 'react';
-import { createClient } from '@/lib/supabase/supabaseClient';
+import React, { useState, useEffect } from 'react';
 import { Input, InputWrap } from '@/components/common/input';
 import Btn from '@/components/common/button/Btn';
 import { Content, ContentWrap } from '@/components/common/content';
 import Tab, { useTabStore } from '@/components/common/tab/Tab';
+import { resetPassword, findAccount } from '@/components/auth/authSection/action';
+import Text from '@/components/text/Text';
+import styles from './FindAuth.module.scss';
 
 const FindAuth: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -12,20 +14,24 @@ const FindAuth: React.FC = () => {
   const [message, setMessage] = useState('');
   const { activeTab } = useTabStore();
 
-  const supabase = createClient();
+  // 탭이 변경될 때마다 폼 리셋
+  useEffect(() => {
+    setEmail('');
+    setName('');
+    setMessage('');
+  }, [activeTab]);
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage('');
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      });
-
-      if (error) throw error;
-
-      setMessage('비밀번호 재설정 링크가 이메일로 전송되었습니다.');
+      const result = await resetPassword(email);
+      if (result.success) {
+        setMessage('비밀번호 재설정 링크가 이메일로 전송되었습니다.');
+      } else {
+        setMessage(result.error || '오류가 발생했습니다. 다시 시도해 주세요.');
+      }
     } catch (error) {
       setMessage('오류가 발생했습니다. 다시 시도해 주세요.');
       console.error('Password reset error:', error);
@@ -35,10 +41,18 @@ const FindAuth: React.FC = () => {
   const handleAccountSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage('');
-
-    // 여기서 실제로는 서버에 요청을 보내 계정을 찾아야 합니다.
-    // 이 예제에서는 단순히 메시지만 표시합니다.
-    setMessage('입력하신 정보로 계정을 찾고 있습니다. 결과는 등록된 이메일로 전송됩니다.');
+  
+    try {
+      const result = await findAccount(name);
+      if (result.success) {
+        setMessage(`${result.message} 관련 이메일: ${result.emails?.join(', ')}`);
+      } else {
+        setMessage(result.message);
+      }
+    } catch (error) {
+      setMessage('오류가 발생했습니다. 다시 시도해 주세요.');
+      console.error('Account search error:', error);
+    }
   };
 
   const tabs = [
@@ -47,7 +61,7 @@ const FindAuth: React.FC = () => {
   ];
 
   return (
-    <ContentWrap className="find-auth-container" column>
+    <ContentWrap column>
       <Tab tabs={tabs} />
       <Content title={activeTab === 'accountSearch' ? '계정 찾기' : '비밀번호 재설정'} maxWidth='600px'>
         {activeTab === 'accountSearch' ? (
@@ -55,13 +69,16 @@ const FindAuth: React.FC = () => {
             <InputWrap>
               <Input
                 type="text"
-                placeholder="이름"
+                placeholder="닉네임"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
               />
             </InputWrap>
-            <Btn type="submit">계정 찾기</Btn>
+            <div className={styles.form__result}>
+              {message && <Text variant='p'>{message}</Text>}
+              <Btn type="submit">계정 찾기</Btn>
+            </div>
           </form>
         ) : (
           <form onSubmit={handleResetPassword}>
@@ -74,11 +91,12 @@ const FindAuth: React.FC = () => {
                 required
               />
             </InputWrap>
-            <Btn type="submit">비밀번호 재설정 링크 받기</Btn>
+            <div className={styles.form__result}>
+              {message && <Text variant='p'>{message}</Text>}
+              <Btn type="submit">비밀번호 재설정 링크 받기</Btn>
+            </div>
           </form>
         )}
-
-        {message && <p className="message">{message}</p>}
       </Content>
     </ContentWrap>
   );
