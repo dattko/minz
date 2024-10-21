@@ -1,0 +1,28 @@
+.tab{
+
+  &__wrap{
+    display: flex;
+    border: 1px solid $colorGray;
+    border-radius: 4px;
+    overflow: hidden;
+    align-self: baseline;
+    
+  }
+  &__btn{
+    height: 28px;
+    padding: 0 12px;
+    border-right: 1px solid $colorGray;
+    font-size: 12px;
+    &:hover{
+      background-color: rgba($color:$colorGray, $alpha: .4);
+    }
+    &:last-child{
+      border-right: none;
+    }
+
+    &__active{
+      background-color: $colorPrimary !important;
+      color: white !important;
+    }
+  }
+}

@@ -39,9 +39,11 @@ const nav: React.FC<navProps> = ({ menuItems, children }) => {
   return (
   <nav className={`${styles.nav} ${isNavActive ? styles.nav__active : ''}`}>
     <div className={styles.nav__wrap}>
-      <div className={styles.nav__login}>
-        {children}
-      </div>
+      {isNavActive &&
+        <div className={styles.nav__login}>
+          {children}
+        </div>
+      }
       <ul className={styles.nav__ul}>
         {menuItems.map((item: MenuItem) => (
           <li key={item.id} className={styles.nav__li}>
