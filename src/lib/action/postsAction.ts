@@ -394,8 +394,8 @@ export async function getPostsByCategory(categorySlug: string, limit: number = 3
     case 'myposts':
       const user = await getUserInfo();
       if (user) {
-        query += `&author=eq.${user.nickname}&order=created_at.desc`;
-        countQuery += `&author=eq.${user.nickname}`;
+        query += `&user_id=eq.${user.id}&order=created_at.desc`;
+        countQuery += `&user_id=eq.${user.id}`;
       } else {
         return { posts: [], total: 0 };
       }
@@ -417,7 +417,7 @@ export async function getPostsByCategory(categorySlug: string, limit: number = 3
 
     let totalCount = totalCountResult[0]?.count || 0;
     
-    // For popular category, always set total to 30 or less
+    // 인기글은 최대 30개까지만 표시
     if (categorySlug === 'popular') {
       totalCount = Math.min(totalCount, 30);
     }
