@@ -305,7 +305,7 @@ export async function toggleRecommendation(postId: number) {
 
   const isRecommended = await checkUserRecommendation(postId, user.id);
 
-  revalidatePath(`/posts/view/[slug]/[id]`);
+  revalidatePath(`/posts/view/[slug]/[id]`, 'page');
   return { recommendations: data.recommendations, isRecommended };
 }
 
