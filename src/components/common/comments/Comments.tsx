@@ -5,7 +5,6 @@ import Text from '@/components/text/Text';
 import styles from './Comments.module.scss';
 import Btn from '../button/Btn';
 import { Comment } from '@/types/dataType';
-import { getUserInfo } from '@/components/auth/authSection/action';
 import { fetchComments, addComment, addReply, editComment, deleteComment } from '@/lib/action/commentAction';
 import { formatDate } from '@/utils/utils';
 

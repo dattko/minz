@@ -8,7 +8,6 @@ import Btn from '@/components/common/button/Btn';
 import Text from '@/components/text/Text';
 import styles from './MyPageSettings.module.scss';
 import { updateProfile, changePassword } from '@/components/auth/authSection/action';
-import { getUserInfo } from '@/components/auth/authSection/action';
 
 const SettingsForm: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
