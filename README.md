@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Minz
 
-## Getting Started
+**Minz**는 사용자가 공지사항, 질문, 정보를 공유할 수 있는 커뮤니티 웹 애플리케이션입니다. 직관적이고 사용하기 쉬운 인터페이스로 사용자 간의 원활한 소통을 지원합니다.
 
-First, run the development server:
+[Live Site](https://minz.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📋 목차
+- [프로젝트 설명](#-프로젝트-설명)
+- [주요 기능](#-주요-기능)
+- [페이지 구성](#-페이지-구성)
+- [기술 스택](#-기술-스택)
+- [설치 및 실행 방법](#-설치-및-실행-방법)
+- [코드 스타일](#-코드-스타일)
+- [기여 방법](#-기여-방법)
+- [라이선스](#-라이선스)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📚 프로젝트 설명
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Minz는 공지사항, 자유 게시판, 정보 공유 및 질문 게시판을 통해 사용자 간의 정보 공유와 토론을 지원하는 커뮤니티 플랫폼입니다. 사용자 인증을 통해 관리자는 공지 사항을 게시하고, 일반 사용자는 질문이나 정보를 자유롭게 게시할 수 있습니다.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ✨ 주요 기능
 
-## Learn More
+- **공지사항 게시판**: 관리자 전용으로 공지사항 등록, 수정, 삭제가 가능합니다.
+- **자유 게시판**: 자유 주제의 게시물 작성과 댓글 기능을 지원합니다.
+- **질문/정보 게시판**: 질문과 정보를 공유하며, 댓글을 통해 상호작용합니다.
+- **인증 및 권한 관리**: 사용자 권한에 따라 기능 접근을 제한합니다.
+- **게시물 및 댓글 기능**: 게시물 작성, 편집, 삭제와 댓글을 통한 소통 기능 제공.
 
-To learn more about Next.js, take a look at the following resources:
+## 🗂 페이지 구성
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 1. 홈 페이지
+- 전체 게시판과 최신 게시물을 한눈에 확인할 수 있습니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. 공지사항 페이지
+- 관리자 전용 페이지로, 중요한 공지사항을 게시할 수 있습니다.
 
-## Deploy on Vercel
+### 3. 자유 게시판
+- 사용자가 다양한 주제로 게시물을 작성하고 댓글을 달 수 있는 공간입니다.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 4. 질문/정보 게시판
+- 질문과 유용한 정보를 공유하며 상호 답변할 수 있는 게시판입니다.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 5. 프로필 페이지
+- 사용자 개인 정보와 활동 내역을 관리할 수 있습니다.
+
+## 🛠 기술 스택
+
+- **프론트엔드**: Next.js
+- **데이터베이스**: Supabase
+- **스타일링**: Scss모듈
+- **배포**: Vercel
+- **상태관리**: Zustand
+- **에디터**: Tiptap 에디터
+
+## 🚀 설치 및 실행 방법
+
+### 요구 사항
+- Node.js 14 이상
+- npm 또는 yarn
+
