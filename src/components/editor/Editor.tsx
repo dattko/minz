@@ -35,9 +35,11 @@ const Tiptap = forwardRef<TiptapRef, TiptapProps>(({ onReady, initialContent }, 
   const editor = useEditor({
     extensions: editorExtensions,
     content: initialContent,
+    immediatelyRender: false,
     onCreate: ({ editor }) => {
       if (onReady) onReady();
     },
+    
   })
 
   useImperativeHandle(ref, () => ({
