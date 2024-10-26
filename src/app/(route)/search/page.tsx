@@ -3,7 +3,7 @@ import { ContentWrap, Content } from '@/components/common/content';
 import List from '@/components/common/list/List';
 import { searchPosts } from '@/lib/action/serachAction';
 import Text from '@/components/text/Text';
-import ContentPreview from './ContentPreview';
+import ResultPreview from './ResultPreview';
 
 interface SearchPageProps {
   searchParams: { q: string };
@@ -29,32 +29,27 @@ const SearchPage: React.FC<SearchPageProps> = async ({ searchParams }) => {
         <Text variant='h2' color='search'>{`'${q}' 검색 결과`}</Text>
         {titleResults.length > 0 && (
           <Content title={`제목 (${titleResults.length}건)`}>
-            <List 
+            <ResultPreview 
               posts={titleResults}
-              total={titleResults.length}
-              showViews={true}
-              currentPage={1}
-              basePath={`/search?q=${encodeURIComponent(q)}`}
+              searchQuery={q}
             />
           </Content>
         )}
         {contentResults.length > 0 && (
           <Content title={`내용 (${contentResults.length}건)`}>
-            <ContentPreview 
+            <ResultPreview 
               posts={contentResults}
               searchQuery={q}
-              maxLength={200}
+              contentText
             />
           </Content>
         )}
         {authorResults.length > 0 && (
           <Content title={`작성자 (${authorResults.length}건)`}>
-            <List 
+            <ResultPreview 
               posts={authorResults}
-              total={authorResults.length}
-              showViews={true}
-              currentPage={1}
-              basePath={`/search?q=${encodeURIComponent(q)}`}
+              searchQuery={q}
+
             />
           </Content>
         )}

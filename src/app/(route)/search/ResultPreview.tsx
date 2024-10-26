@@ -1,18 +1,19 @@
 import React from 'react';
 import Link from 'next/link';
-import styles from './ContentPreview.module.scss';
+import styles from './ResultPreview.module.scss';
 import Text from '@/components/text/Text';
 import { Eye, Heart } from 'lucide-react';
 import { formatDate } from '@/utils/utils';
 import { ListItem } from '@/types/dataType';
 
-interface ContentPreviewProps {
+interface ResultPreviewProps {
   posts: ListItem[];
   searchQuery: string;
   maxLength?: number;
+  contentText?: boolean
 }
 
-const ContentPreview: React.FC<ContentPreviewProps> = ({ posts, searchQuery, maxLength = 100 }) => {
+const ResultPreview: React.FC<ResultPreviewProps> = ({ posts, searchQuery, maxLength = 200, contentText }) => {
   // 검색어를 포함한 텍스트에 <mark> 태그를 적용하여 JSX로 반환하는 함수
   const highlightSearchQuery = (text: string, query: string) => {
     if (!query) return text;
@@ -75,13 +76,14 @@ const ContentPreview: React.FC<ContentPreviewProps> = ({ posts, searchQuery, max
               </div>
             </div>
           </div>
+          {contentText && (
           <div className={styles.preview__content}>
             <Text variant='p'>{getPreview(post.content)}</Text>
-          </div>
+          </div>)}
         </li>
       ))}
     </ul>
   );
 };
 
-export default ContentPreview;
+export default ResultPreview;

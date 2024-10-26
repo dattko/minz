@@ -10,7 +10,7 @@ export async function searchPosts(
   titleResults: ListItem[], 
   contentResults: ListItem[], 
   authorResults: ListItem[], 
-  total: number 
+  total: number ,
 }> {
   const supabase = createClient();
   try {
