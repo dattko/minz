@@ -10,8 +10,9 @@ import PostsDeleteBtn from './PostDeleteBtn';
 import RecommendationBtn from './RecommendationBtn';
 
 interface PostsDetailProps extends Posts {
-  nickname?: string
-  isRecommended: boolean
+  nickname?: string;
+  isRecommended: boolean;
+  author_id?: string;
 }
 
 const PostsDetail: React.FC<PostsDetailProps> = async({
@@ -23,9 +24,10 @@ const PostsDetail: React.FC<PostsDetailProps> = async({
   recommendations,
   category,
   category_slug,
-  nickname,
   unique_views,
-  isRecommended
+  isRecommended,
+  user_id,
+  author_id
 }) => {
 
 
@@ -66,7 +68,7 @@ const PostsDetail: React.FC<PostsDetailProps> = async({
       />
       <div className={styles.posts__option}>
           <div>
-            {nickname === author && (
+            {user_id === author_id  && (
               <>
                 <Link href={`/posts/edit/${id}?category=${category_slug}`}>
                   <Btn size='small' variant='outline-secondary'>수정</Btn>

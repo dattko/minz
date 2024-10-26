@@ -35,6 +35,7 @@ const PostPage: React.FC<PostPageProps> = async ({ params }) => {
   const initialComments = await fetchComments(parseInt(params.id));
 
   let isRecommended = false;
+
   if (user) {
     isRecommended = await checkUserRecommendation(parseInt(params.id), user.id);
   }
@@ -53,6 +54,8 @@ const PostPage: React.FC<PostPageProps> = async ({ params }) => {
         unique_views={unique_views}
         isRecommended={isRecommended}
         nickname={user?.nickname}
+        author_id={post.user_id}
+        user_id={user?.id || ''}
       />
       <footer className={styles.posts__footer}>
         <Comments postId={post.id} userInfo={user} initialComments={initialComments} />

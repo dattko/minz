@@ -58,6 +58,7 @@ export async function createPosts(postData: EditPost) {
       title,
       content: finalContent,
       author: user.nickname,
+      user_id: user.id,
       category_slug, 
       status: 'published'
     })
@@ -89,14 +90,14 @@ export async function updatePosts(postData: EditPost) {
     // 기존 게시글 정보 가져오기
     const { data: existingPost, error: fetchError } = await supabase
       .from('posts')
-      .select('author, content')
+      .select('user_id, content')
       .eq('id', id)
       .single()
 
     if (fetchError) throw fetchError
 
     // 작성자 확인
-    if (existingPost.author !== user.nickname) {
+    if (existingPost.user_id !== user.id) {
       throw new Error('수정 권한이 없습니다.')
     }
 
@@ -178,14 +179,14 @@ export async function deletePosts(postId: number, categorySlug: string) {
     // 게시물 정보 가져오기
     const { data: post, error: fetchError } = await supabase
       .from('posts')
-      .select('author, content')
+      .select('user_id, content')
       .eq('id', postId)
       .single()
 
     if (fetchError) throw fetchError
 
     // 작성자 확인
-    if (post.author !== user.nickname) {
+    if (post.user_id !== user.id) {
       throw new Error('삭제 권한이 없습니다.')
     }
 

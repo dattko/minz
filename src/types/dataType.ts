@@ -20,7 +20,7 @@ export interface Posts {
   id: number;
   title: string;
   content: string; // 포스트 내용
-  author: string; // 작성자
+  author?: string; // 작성자
   unique_views: number;
   recommendations: number; // 추천 수
   link?: string;
@@ -33,6 +33,7 @@ export interface Posts {
   featured_image?: string; // 대표 이미지 URL
   category_slug: string; 
   categoryName?: string;
+  user_id: string;
   localImages?: {
     id: string;
     url: string;
