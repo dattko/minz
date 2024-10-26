@@ -11,14 +11,16 @@ import { ListItem } from '@/types/dataType'
 import { useQuery } from '@tanstack/react-query'
 
 interface ListProps {
- categorySlug?: string
- showViews?: boolean
- simple?: boolean
- limit?: number
- basePath?: string
- currentPage?: number
- initialData?: { posts: ListItem[]; total: number }
- pagenation?: boolean
+  categorySlug?: string
+  showViews?: boolean
+  simple?: boolean
+  limit?: number
+  basePath?: string
+  currentPage?: number
+  initialData?: { posts: ListItem[]; total: number }
+  pagenation?: boolean
+  posts?: ListItem[]; 
+  total?: number;  
 }
 
 const List: React.FC<ListProps> = ({ 
