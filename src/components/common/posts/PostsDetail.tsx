@@ -15,7 +15,7 @@ interface PostsDetailProps extends Posts {
   author_id?: string;
 }
 
-const PostsDetail: React.FC<PostsDetailProps> = async({
+const PostsDetail: React.FC<PostsDetailProps> = ({
   id,
   title,
   content,
