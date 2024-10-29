@@ -20,7 +20,7 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params, searchParams 
   const [category, user, initialData] = await Promise.all([
     getCategoryDetails(params.slug),
     getUserInfo(),
-    getPostsByCategory(params.slug, 30, currentPage)  // 초기 데이터 가져오기
+    getPostsByCategory(params.slug, 15, currentPage)  // 초기 데이터 가져오기
   ]);
 
   if (!category) {
