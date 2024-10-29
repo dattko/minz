@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, {useMemo} from 'react'
 import Link from 'next/link'
 import styles from './List.module.scss'
 import Text from '@/components/text/Text'
@@ -40,6 +40,13 @@ const List: React.FC<ListProps> = ({
    initialData: initialData,
  })
 
+ const getFormattedDate = useMemo(() => (date: string) => {
+  return simple ? 
+    formatDate(date, { showTime: false, dateStyle: 'short' }) 
+    : 
+    formatDate(date, { dateStyle: 'short', timeStyle: 'short' });
+}, [simple]);
+
  if (isError) return <div>게시글을 불러오는 중 오류가 발생했습니다.</div>
 
  const posts = data?.posts || []
@@ -75,15 +82,11 @@ const List: React.FC<ListProps> = ({
              <div className={styles.list__views}>
                <Heart size={12} color='gray'/>
                <Text variant='p' fontSize='xs' color='gray'>{post.recommendations}</Text>
-             </div>
+             </div> 
            )}
            <div className={styles.list__info}>
              <Text variant='p' color='gray' fontSize='xs'>
-               {simple ? 
-                 formatDate(post.created_at, { showTime: false, dateStyle: 'short' }) 
-                 : 
-                 formatDate(post.created_at, {dateStyle: 'short', timeStyle: 'short'})
-               }
+              {getFormattedDate(post.created_at)}
              </Text>
            </div>
          </li> 

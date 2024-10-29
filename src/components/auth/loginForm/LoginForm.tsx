@@ -72,6 +72,7 @@ const LoginForm = () => {
           type="password" 
           required
           placeholder='비밀번호'
+          autoComplete='current-password'
         />
       </InputWrap>
       <div className={styles.login__option}>

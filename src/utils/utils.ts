@@ -6,60 +6,74 @@ type DateFormatOptions = {
 };
 
 export function formatDate(dateString: string, options: DateFormatOptions = {}): string {
-  const {
-    showTime = true,
-    showDate = true,
-    dateStyle = 'medium',
-    timeStyle = 'medium'
-  } = options;
+  try {
+    const {
+      showTime = true,
+      showDate = true,
+      dateStyle = 'medium',
+      timeStyle = 'medium'
+    } = options;
 
-  const date = new Date(dateString);
-  
-  // 클라이언트 로컬 시간으로 변환
-  const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-
-  // 나머지 코드 동일
-  const year = localDate.getFullYear();
-  const month = String(localDate.getMonth() + 1).padStart(2, '0');
-  const day = String(localDate.getDate()).padStart(2, '0');
-  const hours = String(localDate.getHours()).padStart(2, '0');
-  const minutes = String(localDate.getMinutes()).padStart(2, '0');
-  const seconds = String(localDate.getSeconds()).padStart(2, '0');
-
-  let formattedDate = '';
-
-  if (showDate) {
-    switch(dateStyle) {
-      case 'full':
-      case 'long':
-        formattedDate += `${year}년 ${month}월 ${day}일`;
-        break;
-      case 'medium':
-        formattedDate += `${year}. ${month}. ${day}.`;
-        break;
-      case 'short':
-        formattedDate += `${year}.${month}.${day}`;
-        break;
+    // 날짜 문자열 유효성 검사
+    if (!dateString) {
+      return '';
     }
-  }
 
-  if (showTime) {
-    if (showDate) formattedDate += ' ';
-    switch(timeStyle) {
-      case 'full':
-      case 'long':
-        formattedDate += `${hours}시 ${minutes}분 ${seconds}초`;
-        break;
-      case 'medium':
-        formattedDate += `${hours}:${minutes}:${seconds}`;
-        break;
-      case 'short':
-        formattedDate += `${hours}:${minutes}`;
-        break;
+    const date = new Date(dateString);
+    
+    // 유효하지 않은 날짜인 경우 처리
+    if (isNaN(date.getTime())) {
+      return dateString;
     }
-  }
+    
+    // 클라이언트 로컬 시간으로 변환
+    const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
 
-  return formattedDate;
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
+    const hours = String(localDate.getHours()).padStart(2, '0');
+    const minutes = String(localDate.getMinutes()).padStart(2, '0');
+    const seconds = String(localDate.getSeconds()).padStart(2, '0');
+
+    let formattedDate = '';
+
+    if (showDate) {
+      switch(dateStyle) {
+        case 'full':
+        case 'long':
+          formattedDate += `${year}년 ${month}월 ${day}일`;
+          break;
+        case 'medium':
+          formattedDate += `${year}. ${month}. ${day}.`;
+          break;
+        case 'short':
+          formattedDate += `${year}.${month}.${day}`;
+          break;
+      }
+    }
+
+    if (showTime) {
+      if (showDate) formattedDate += ' ';
+      switch(timeStyle) {
+        case 'full':
+        case 'long':
+          formattedDate += `${hours}시 ${minutes}분 ${seconds}초`;
+          break;
+        case 'medium':
+          formattedDate += `${hours}:${minutes}:${seconds}`;
+          break;
+        case 'short':
+          formattedDate += `${hours}:${minutes}`;
+          break;
+      }
+    }
+
+    return formattedDate;
+  } catch (error) {
+    console.error('Date formatting error:', error);
+    return dateString || '';
+  }
 }
 
 
