@@ -27,7 +27,7 @@ const List: React.FC<ListProps> = ({
  categorySlug, 
  showViews = false, 
  simple = false, 
- limit = 30, 
+ limit = 15, 
  basePath,
  currentPage = 1,
  initialData,

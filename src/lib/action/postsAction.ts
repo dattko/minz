@@ -419,7 +419,7 @@ export async function getPostsByCategory(categorySlug: string, limit: number = 3
     
     // 인기글은 최대 30개까지만 표시
     if (categorySlug === 'popular') {
-      totalCount = Math.min(totalCount, 15);
+      totalCount = Math.min(totalCount);
     }
 
     return {
