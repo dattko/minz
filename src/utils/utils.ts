@@ -14,27 +14,23 @@ export function formatDate(dateString: string, options: DateFormatOptions = {}):
       timeStyle = 'medium'
     } = options;
 
-    // 날짜 문자열 유효성 검사
     if (!dateString) {
       return '';
     }
 
     const date = new Date(dateString);
     
-    // 유효하지 않은 날짜인 경우 처리
     if (isNaN(date.getTime())) {
       return dateString;
     }
     
-    // 클라이언트 로컬 시간으로 변환
-    const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-
-    const year = localDate.getFullYear();
-    const month = String(localDate.getMonth() + 1).padStart(2, '0');
-    const day = String(localDate.getDate()).padStart(2, '0');
-    const hours = String(localDate.getHours()).padStart(2, '0');
-    const minutes = String(localDate.getMinutes()).padStart(2, '0');
-    const seconds = String(localDate.getSeconds()).padStart(2, '0');
+    // UTC 날짜/시간 값을 직접 사용
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(date.getUTCDate()).padStart(2, '0');
+    const hours = String(date.getUTCHours() + 9).padStart(2, '0'); // KST = UTC+9
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    const seconds = String(date.getUTCSeconds()).padStart(2, '0');
 
     let formattedDate = '';
 
