@@ -15,20 +15,22 @@ export function formatDate(dateString: string, options: DateFormatOptions = {}):
 
   const date = new Date(dateString);
   
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
+  // 클라이언트 로컬 시간으로 변환
+  const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+
+  // 나머지 코드 동일
+  const year = localDate.getFullYear();
+  const month = String(localDate.getMonth() + 1).padStart(2, '0');
+  const day = String(localDate.getDate()).padStart(2, '0');
+  const hours = String(localDate.getHours()).padStart(2, '0');
+  const minutes = String(localDate.getMinutes()).padStart(2, '0');
+  const seconds = String(localDate.getSeconds()).padStart(2, '0');
 
   let formattedDate = '';
 
   if (showDate) {
     switch(dateStyle) {
       case 'full':
-        formattedDate += `${year}년 ${month}월 ${day}일`;
-        break;
       case 'long':
         formattedDate += `${year}년 ${month}월 ${day}일`;
         break;
@@ -59,6 +61,7 @@ export function formatDate(dateString: string, options: DateFormatOptions = {}):
 
   return formattedDate;
 }
+
 
 // 모든 이벤트 타입을 포함하는 유니온 타입
 type EventType = 
