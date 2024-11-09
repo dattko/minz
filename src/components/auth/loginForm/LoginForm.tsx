@@ -63,6 +63,7 @@ const LoginForm = () => {
           placeholder='이메일(아이디)'
           value={email}
           onChange={handleEmailChange}
+          autoComplete='email'
         />
       </InputWrap>
       <InputWrap>
